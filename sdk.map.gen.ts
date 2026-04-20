@@ -1,0 +1,70 @@
+export const serviceMap = {
+	batch: {
+		download: {
+			csv: { method: "GET", path: "/v1/projects/{project_id}/batches/{batch_id}/download/csv", params: ["project_id","batch_id"] },
+			json: { method: "GET", path: "/v1/projects/{project_id}/batches/{batch_id}/download/json", params: ["project_id","batch_id"] },
+			xlsx: { method: "GET", path: "/v1/projects/{project_id}/batches/{batch_id}/download/xlsx", params: ["project_id","batch_id"] },
+				},
+		get: { method: "GET", path: "/v1/projects/{project_id}/batches/{batch_id}", params: ["project_id","batch_id"] },
+		list: { method: "GET", path: "/v1/projects/{project_id}/batches", params: ["project_id"] },
+		},
+	column: {
+		add: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/columns", params: ["project_id","table_id"] },
+		distinct: { method: "GET", path: "/v1/projects/{project_id}/tables/{table_id}/columns/{col_id}/distinct", params: ["project_id","table_id","col_id"] },
+		remove: { method: "DELETE", path: "/v1/projects/{project_id}/tables/{table_id}/columns/{col_id}", params: ["project_id","table_id","col_id"] },
+		reorder: { method: "PUT", path: "/v1/projects/{project_id}/tables/{table_id}/columns/order", params: ["project_id","table_id"] },
+		update: { method: "PATCH", path: "/v1/projects/{project_id}/tables/{table_id}/columns/{col_id}", params: ["project_id","table_id","col_id"] },
+		},
+	export: {
+		get: { method: "GET", path: "/v1/projects/{project_id}/exports/{export_id}", params: ["project_id","export_id"] },
+		},
+	extract: {
+		once: { method: "POST", path: "/v1/projects/{project_id}/extract", params: ["project_id"] },
+		stream: { method: "POST", path: "/v1/projects/{project_id}/extract-stream", params: ["project_id"] },
+		table: {
+			once: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/extract", params: ["project_id","table_id"] },
+			stream: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/extract-stream", params: ["project_id","table_id"] },
+				},
+		},
+	row: {
+		aggregate: { method: "GET", path: "/v1/projects/{project_id}/tables/{table_id}/rows/aggregate", params: ["project_id","table_id"] },
+		bulk: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/rows/bulk", params: ["project_id","table_id"] },
+		create: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/rows", params: ["project_id","table_id"] },
+		delete: { method: "DELETE", path: "/v1/projects/{project_id}/tables/{table_id}/rows/{row_id}", params: ["project_id","table_id","row_id"] },
+		get: { method: "GET", path: "/v1/projects/{project_id}/tables/{table_id}/rows/{row_id}", params: ["project_id","table_id","row_id"] },
+		list: { method: "GET", path: "/v1/projects/{project_id}/tables/{table_id}/rows", params: ["project_id","table_id"] },
+		update: { method: "PATCH", path: "/v1/projects/{project_id}/tables/{table_id}/rows/{row_id}", params: ["project_id","table_id","row_id"] },
+		},
+	suggest: {
+		schema: { method: "POST", path: "/v1/projects/{project_id}/suggest-schema", params: ["project_id"] },
+		},
+	table: {
+		create: { method: "POST", path: "/v1/projects/{project_id}/tables", params: ["project_id"] },
+		delete: { method: "DELETE", path: "/v1/projects/{project_id}/tables/{table_id}", params: ["project_id","table_id"] },
+		duplicate: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/duplicate", params: ["project_id","table_id"] },
+		export: { method: "GET", path: "/v1/projects/{project_id}/tables/{table_id}/export", params: ["project_id","table_id"] },
+		get: { method: "GET", path: "/v1/projects/{project_id}/tables/{table_id}", params: ["project_id","table_id"] },
+		list: { method: "GET", path: "/v1/projects/{project_id}/tables", params: ["project_id"] },
+		restore: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/restore", params: ["project_id","table_id"] },
+		update: { method: "PATCH", path: "/v1/projects/{project_id}/tables/{table_id}", params: ["project_id","table_id"] },
+		},
+	tableTemplate: {
+		create: { method: "POST", path: "/v1/table-templates" },
+		delete: { method: "DELETE", path: "/v1/table-templates/{template_id}", params: ["template_id"] },
+		listMine: { method: "GET", path: "/v1/table-templates/mine" },
+		projectGet: { method: "GET", path: "/v1/projects/{project_id}/table-templates/{template_id}", params: ["project_id","template_id"] },
+		projectList: { method: "GET", path: "/v1/projects/{project_id}/table-templates", params: ["project_id"] },
+		update: { method: "PATCH", path: "/v1/table-templates/{template_id}", params: ["template_id"] },
+		use: { method: "POST", path: "/v1/projects/{project_id}/table-templates/{template_id}/use", params: ["project_id","template_id"] },
+		},
+	webhook: {
+		create: { method: "POST", path: "/v1/organizations/{organization_id}/webhooks", params: ["organization_id"] },
+		delete: { method: "DELETE", path: "/v1/organizations/{organization_id}/webhooks/{id}", params: ["organization_id","id"] },
+		deliveries: { method: "GET", path: "/v1/organizations/{organization_id}/webhooks/{id}/deliveries", params: ["organization_id","id"] },
+		get: { method: "GET", path: "/v1/organizations/{organization_id}/webhooks/{id}", params: ["organization_id","id"] },
+		list: { method: "GET", path: "/v1/organizations/{organization_id}/webhooks", params: ["organization_id"] },
+		rotateSecret: { method: "POST", path: "/v1/organizations/{organization_id}/webhooks/{id}/rotate-secret", params: ["organization_id","id"] },
+		test: { method: "POST", path: "/v1/organizations/{organization_id}/webhooks/{id}/test", params: ["organization_id","id"] },
+		update: { method: "PATCH", path: "/v1/organizations/{organization_id}/webhooks/{id}", params: ["organization_id","id"] },
+		},
+} as const
