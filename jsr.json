@@ -5,6 +5,6 @@
   "license": "MIT",
   "repository": "https://github.com/anyrow/sdk-typescript",
   "publish": {
-    "include": ["*.gen.ts", "README.md", "LICENSE"]
+    "include": ["**/*.gen.ts", "README.md", "LICENSE"]
   }
 }
