@@ -3,9 +3,8 @@
   "version": "1.0.0",
   "exports": "./sdk.index.gen.ts",
   "license": "MIT",
-  "homepage": "https://anyrow.ai",
   "repository": "https://github.com/anyrow/sdk-typescript",
   "publish": {
-    "include": ["**/*.gen.ts", "README.md", "LICENSE"]
+    "include": ["*.gen.ts", "README.md", "LICENSE"]
   }
 }
