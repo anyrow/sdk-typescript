@@ -2,7 +2,7 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
-Official TypeScript/JavaScript SDK for the [Anyrow](https://anyrow.ai) API. Runs on Node, Bun, Deno, and Cloudflare Workers — any runtime with `fetch`.
+Official TypeScript/JavaScript SDK for the [Anyrow](https://anyrow.ai) API. Runs in browsers and on Node, Bun, Deno, and Cloudflare Workers — any runtime with `fetch`.
 
 ## Installation
 
