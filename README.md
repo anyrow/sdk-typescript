@@ -2,25 +2,29 @@
 
 [![MIT License](https://img.shields.io/badge/license-MIT-blue)](./LICENSE)
 
-Official TypeScript/JavaScript SDK for the [Anyrow](https://anyrow.ai) API. Works with Bun, Deno, and any bundler that handles TypeScript imports.
+Official TypeScript/JavaScript SDK for the [Anyrow](https://anyrow.ai) API. Runs on Node, Bun, Deno, and Cloudflare Workers — any runtime with `fetch`.
 
 ## Installation
 
 ```bash
-bun add github:anyrow/sdk-typescript
+npm install @anyrow/sdk
+# or: pnpm add @anyrow/sdk
+# or: yarn add @anyrow/sdk
+# or: bun add @anyrow/sdk
+# or: deno add jsr:@anyrow/sdk
 ```
 
 ## Quick start
 
 ```ts
-import { AnyrowSDK } from "anyrow"
+import { AnyrowSDK } from "@anyrow/sdk"
 
 const client = new AnyrowSDK({
   baseURL: "https://api.anyrow.ai",
-  headers: { "Authorization": "Bearer YOUR_API_KEY" },
+  headers: { Authorization: "Bearer YOUR_API_KEY" },
 })
 
-const result = await client.extract._call({
+const result = await client.extract.once({
   params: { project_id: "proj_123" },
   json: { url: "https://example.com/document.pdf" },
 })

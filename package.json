@@ -1,5 +1,5 @@
 {
-	"name": "@anyrow/sdk-typescript",
+	"name": "@anyrow/sdk",
 	"version": "1.0.0",
 	"description": "AI-native operations platform — extract, store, review, sync. Turn any document, photo, call, email, or website into a row in your table.",
 	"type": "module",
