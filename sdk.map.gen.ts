@@ -20,10 +20,10 @@ export const serviceMap = {
 		},
 	extract: {
 		once: { method: "POST", path: "/v1/projects/{project_id}/extract", params: ["project_id"] },
-		stream: { method: "POST", path: "/v1/projects/{project_id}/extract-stream", params: ["project_id"] },
+		stream: { method: "POST", path: "/v1/projects/{project_id}/extract-stream", params: ["project_id"], sse: true },
 		table: {
 			once: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/extract", params: ["project_id","table_id"] },
-			stream: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/extract-stream", params: ["project_id","table_id"] },
+			stream: { method: "POST", path: "/v1/projects/{project_id}/tables/{table_id}/extract-stream", params: ["project_id","table_id"], sse: true },
 				},
 		},
 	row: {

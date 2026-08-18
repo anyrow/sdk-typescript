@@ -538,7 +538,7 @@ export class AnyrowSDK<TThrow extends boolean = false> {
 
 			if (response.status === 401 && this.#config.onAuthExpired && !isRetry && !(body instanceof FormData)) {
 				const newToken = await this.#config.onAuthExpired()
-				if (newToken != null) {
+				if (newToken !== null && newToken !== undefined) {
 					const retryHeaders = new Headers(headers)
 					const authName = this.#config.authHeaderName ?? "Authorization"
 					const authPrefix = this.#config.authHeaderPrefix ?? "Bearer "

@@ -1,27 +1,18 @@
 {
-	"name": "@anyrow/sdk",
-	"version": "1.0.0",
+	"author": {
+		"email": "oss@anyrow.ai",
+		"name": "Anyrow",
+		"url": "https://anyrow.ai"
+	},
+	"bugs": {
+		"email": "oss@anyrow.ai",
+		"url": "https://github.com/anyrow/sdk-typescript/issues"
+	},
 	"description": "AI-native operations platform — extract, store, review, sync. Turn any document, photo, call, email, or website into a row in your table.",
-	"type": "module",
-	"main": "./sdk.index.gen.ts",
 	"exports": {
 		".": "./sdk.index.gen.ts"
 	},
-	"author": {
-		"name": "Anyrow",
-		"email": "oss@anyrow.ai",
-		"url": "https://anyrow.ai"
-	},
 	"homepage": "https://anyrow.ai",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/anyrow/sdk-typescript.git"
-	},
-	"bugs": {
-		"url": "https://github.com/anyrow/sdk-typescript/issues",
-		"email": "oss@anyrow.ai"
-	},
-	"license": "MIT",
 	"keywords": [
 		"anyrow",
 		"operations-platform",
@@ -40,5 +31,14 @@
 		"nodejs",
 		"bun",
 		"deno"
-	]
+	],
+	"license": "MIT",
+	"main": "./sdk.index.gen.ts",
+	"name": "@anyrow/sdk",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/anyrow/sdk-typescript.git"
+	},
+	"type": "module",
+	"version": "1.0.0"
 }
