@@ -1,14 +1,10 @@
 {
-  "exports": "./sdk.index.gen.ts",
-  "license": "MIT",
-  "name": "@anyrow/sdk",
-  "publish": {
-    "include": [
-      "*.gen.ts",
-      "README.md",
-      "LICENSE"
-    ]
-  },
-  "repository": "https://github.com/anyrow/sdk-typescript",
-  "version": "1.0.0"
+	"exports": "./sdk.index.gen.ts",
+	"license": "MIT",
+	"name": "@anyrow/sdk",
+	"publish": {
+		"include": ["*.gen.ts", "README.md", "LICENSE"]
+	},
+	"repository": "https://github.com/anyrow/sdk-typescript",
+	"version": "1.0.0"
 }
