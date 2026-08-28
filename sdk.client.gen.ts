@@ -114,7 +114,7 @@ export class AnyrowSDK<TThrow extends boolean = false> {
 		const ownState = config.state ?? {}
 		this.state = ownState
 		this.#config = { ...config, state: ownState }
-		this.#fetchFn = config.fetch ?? globalThis.fetch
+		this.#fetchFn = config.fetch ?? (typeof globalThis.fetch === "function" ? globalThis.fetch.bind(globalThis) : globalThis.fetch)
 		this.#searchSerializer = config.buildSearchParams ?? ((q: Record<string, unknown>) => this.#serializeSearch(q))
 		this.#staleTime = config.invalidation?.staleTime ?? 0
 		this.#staleUntil = this.#staleTime > 0
@@ -387,10 +387,28 @@ export class AnyrowSDK<TThrow extends boolean = false> {
 		return params
 	}
 
+	#resolveBaseURL(baseURL: string): URL {
+		if (/^(?:https?|wss?):\/\//i.test(baseURL)) return new URL(baseURL)
+		let origin: unknown
+		try {
+			origin = globalThis.location?.origin
+		} catch {
+			origin = undefined
+		}
+		if (typeof origin === "string" && origin !== "" && origin !== "null" && /^(?:https?|wss?):\/\//i.test(origin)) {
+			try {
+				return new URL(baseURL, origin)
+			} catch {
+				throw new Error(`Invalid baseURL ${JSON.stringify(baseURL)}: expected an absolute http(s): or ws(s): URL. Path-only values such as "/api" resolve against location.origin in browsers.`)
+			}
+		}
+		throw new Error(`Invalid baseURL ${JSON.stringify(baseURL)}: expected an absolute http(s): or ws(s): URL. Path-only values such as "/api" resolve against location.origin in browsers.`)
+	}
+
 	#buildURL(path: string, opts: _RequestOptions): string {
 		let resolvedPath = path
 		if (opts.params) resolvedPath = this.#interpolatePath(path, opts.params)
-		const baseUrl = new URL(this.#config.baseURL)
+		const baseUrl = this.#resolveBaseURL(this.#config.baseURL)
 		const basePath = baseUrl.pathname.endsWith("/") ? baseUrl.pathname : `${baseUrl.pathname}/`
 		const relative = resolvedPath.startsWith("/") ? resolvedPath.slice(1) : resolvedPath
 		const url = new URL(`${basePath}${relative}`, baseUrl)
@@ -401,6 +419,24 @@ export class AnyrowSDK<TThrow extends boolean = false> {
 			for (const [k, v] of sp.entries()) url.searchParams.append(k, v)
 		}
 		return url.toString()
+	}
+
+	#newRequestId(): string {
+		const c = globalThis.crypto as Crypto | undefined
+		if (c && typeof c.randomUUID === "function") return c.randomUUID()
+		if (c && typeof c.getRandomValues === "function") {
+			const bytes = new Uint8Array(16)
+			c.getRandomValues(bytes)
+			bytes[6] = (bytes[6]! & 0x0f) | 0x40
+			bytes[8] = (bytes[8]! & 0x3f) | 0x80
+			let out = ""
+			for (let i = 0; i < 16; i++) {
+				if (i === 4 || i === 6 || i === 8 || i === 10) out += "-"
+				out += bytes[i]!.toString(16).padStart(2, "0")
+			}
+			return out
+		}
+		throw new Error("honey: no crypto.randomUUID or crypto.getRandomValues in this runtime")
 	}
 
 	async #buildHeaders(
@@ -433,6 +469,10 @@ export class AnyrowSDK<TThrow extends boolean = false> {
 			if (pairs) {
 				headers.set("cookie", existing ? `${existing}; ${pairs}` : pairs)
 			}
+		}
+
+		if (!headers.has("x-request-id")) {
+			headers.set("x-request-id", this.#newRequestId())
 		}
 
 		return headers
