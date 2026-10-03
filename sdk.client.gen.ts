@@ -576,12 +576,15 @@ export class AnyrowSDK<TThrow extends boolean = false> {
 			signal?.throwIfAborted()
 			let response = await this.#fetchFn(url, init)
 
-			if (response.status === 401 && this.#config.onAuthExpired && !isRetry && !(body instanceof FormData)) {
-				const newToken = await this.#config.onAuthExpired()
+			/* FormData, Blob, and strings can be sent again; a stream was consumed by the first attempt */
+			if (response.status === 401 && this.#config.onAuthExpired && !isRetry && !(body instanceof ReadableStream)) {
+				const authName = this.#config.authHeaderName ?? "Authorization"
+				const authPrefix = this.#config.authHeaderPrefix ?? "Bearer "
+				const sent = new Headers(headers).get(authName)
+				const rejectedToken = sent?.startsWith(authPrefix) ? sent.slice(authPrefix.length) : (sent ?? null)
+				const newToken = await this.#config.onAuthExpired({ rejectedToken })
 				if (newToken !== null && newToken !== undefined) {
 					const retryHeaders = new Headers(headers)
-					const authName = this.#config.authHeaderName ?? "Authorization"
-					const authPrefix = this.#config.authHeaderPrefix ?? "Bearer "
 					retryHeaders.set(authName, `${authPrefix}${newToken}`)
 					response = await this.#fetchFn(url, { ...init, headers: retryHeaders })
 				}

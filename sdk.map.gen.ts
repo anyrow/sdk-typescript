@@ -33,6 +33,7 @@ export const serviceMap = {
 		delete: { method: "DELETE", path: "/v1/projects/{project_id}/tables/{table_id}/rows/{row_id}", params: ["project_id","table_id","row_id"] },
 		get: { method: "GET", path: "/v1/projects/{project_id}/tables/{table_id}/rows/{row_id}", params: ["project_id","table_id","row_id"] },
 		list: { method: "GET", path: "/v1/projects/{project_id}/tables/{table_id}/rows", params: ["project_id","table_id"] },
+		source: { method: "GET", path: "/v1/projects/{project_id}/tables/{table_id}/rows/{row_id}/source", params: ["project_id","table_id","row_id"] },
 		update: { method: "PATCH", path: "/v1/projects/{project_id}/tables/{table_id}/rows/{row_id}", params: ["project_id","table_id","row_id"] },
 		},
 	suggest: {
