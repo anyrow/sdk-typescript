@@ -39,6 +39,9 @@
 		"type": "git",
 		"url": "git+https://github.com/anyrow/sdk-typescript.git"
 	},
+	"scripts": {
+		"turn": "repo-turn"
+	},
 	"type": "module",
 	"version": "1.0.0"
 }
