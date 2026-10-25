@@ -40,7 +40,8 @@
 		"url": "git+https://github.com/anyrow/sdk-typescript.git"
 	},
 	"scripts": {
-		"turn": "repo-turn"
+		"turn": "repo-turn",
+		"type:check": "bun check"
 	},
 	"type": "module",
 	"version": "1.0.0"
