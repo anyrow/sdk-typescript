@@ -123,8 +123,8 @@ export interface AnyrowSDK<TThrow extends boolean = false> {
 	state: Record<string, unknown>
 	dispose(): void
 	batch: {
-		"get"(input: _Expand<_Inp6> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res2>> : Promise<SDKResult<_Expand<_Res2>, _Expand<_Errs16>>>
 		list(input: { params: { project_id: string }; search: { cursor?: string; limit?: number; order?: string; page?: number; status?: "uploading" | "processing" | "merging" | "complete" | "partial" | "failed" } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res5>> : Promise<SDKResult<_Expand<_Res5>, _Expand<_Errs34>>>
+		retrieve(input: _Expand<_Inp6> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res2>> : Promise<SDKResult<_Expand<_Res2>, _Expand<_Errs16>>>
 		download: {
 			csv(input: _Expand<_Inp6> & _HttpOpts): TThrow extends true ? Promise<string> : Promise<SDKResult<string, _Expand<_Errs0>>>
 			json(input: _Expand<_Inp6> & _HttpOpts): TThrow extends true ? Promise<{ batchId: string; rows: Record<string, unknown>[]; totalRows: number }> : Promise<SDKResult<{ batchId: string; rows: Record<string, unknown>[]; totalRows: number }, _Expand<_Errs0>>>
@@ -139,7 +139,7 @@ export interface AnyrowSDK<TThrow extends boolean = false> {
 		update(input: _Expand<_Inp11> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs6>>>
 	}
 	"export": {
-		"get"(input: { params: { project_id: string; export_id: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res3>> : Promise<SDKResult<_Expand<_Res3>, _Expand<_Errs18>>>
+		retrieve(input: { params: { project_id: string; export_id: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res3>> : Promise<SDKResult<_Expand<_Res3>, _Expand<_Errs18>>>
 	}
 	extract: {
 		once(input: _Expand<_Inp3> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res4>> : Promise<SDKResult<_Expand<_Res4>, _Expand<_Errs11>>>
@@ -154,8 +154,8 @@ export interface AnyrowSDK<TThrow extends boolean = false> {
 		bulk(input: { params: { project_id: string; table_id: string }; json: { creates?: Record<string, unknown>[]; deletes?: string[]; updates?: { data: Record<string, unknown>; id: string }[] } } & _HttpOpts): TThrow extends true ? Promise<{ created?: Record<string, unknown>[]; deleted?: string[]; updated?: Record<string, unknown>[] }> : Promise<SDKResult<{ created?: Record<string, unknown>[]; deleted?: string[]; updated?: Record<string, unknown>[] }, _Expand<_Errs4>>>
 		create(input: { params: { project_id: string; table_id: string }; json: Record<string, unknown> } & _HttpOpts): TThrow extends true ? Promise<Record<string, unknown>> : Promise<SDKResult<Record<string, unknown>, _Expand<_Errs5>>>
 		"delete"(input: _Expand<_Inp12> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res12>> : Promise<SDKResult<_Expand<_Res12>, _Expand<_Errs20>>>
-		"get"(input: _Expand<_Inp12> & _HttpOpts): TThrow extends true ? Promise<Record<string, unknown>> : Promise<SDKResult<Record<string, unknown>, _Expand<_Errs21>>>
 		list(input: { params: { project_id: string; table_id: string }; search: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string } } & _HttpOpts): TThrow extends true ? Promise<{ count: number | null; hasMore: boolean; limit: number; nextCursor: string | null; page: number | null; rows: Record<string, unknown>[] }> : Promise<SDKResult<{ count: number | null; hasMore: boolean; limit: number; nextCursor: string | null; page: number | null; rows: Record<string, unknown>[] }, _Expand<_Errs25>>>
+		retrieve(input: _Expand<_Inp12> & _HttpOpts): TThrow extends true ? Promise<Record<string, unknown>> : Promise<SDKResult<Record<string, unknown>, _Expand<_Errs21>>>
 		source(input: { params: { project_id: string; table_id: string; row_id: string }; search: { disposition?: "attachment" | "inline" } } & _HttpOpts): TThrow extends true ? Promise<ArrayBuffer> : Promise<SDKResult<ArrayBuffer, _Expand<_Errs19>>>
 		update(input: { params: { project_id: string; table_id: string; row_id: string }; json: Record<string, unknown> } & _HttpOpts): TThrow extends true ? Promise<Record<string, unknown>> : Promise<SDKResult<Record<string, unknown>, _Expand<_Errs7>>>
 	}
@@ -167,17 +167,17 @@ export interface AnyrowSDK<TThrow extends boolean = false> {
 		"delete"(input: _Expand<_Inp7> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res12>> : Promise<SDKResult<_Expand<_Res12>, _Expand<_Errs26>>>
 		duplicate(input: { params: { project_id: string; table_id: string }; json: { name: string; slug: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs23>>>
 		"export"(input: { params: { project_id: string; table_id: string }; search: { filter?: string; format: "csv" | "json" | "xlsx"; order?: string; schema?: "true" | "false"; search?: string; since?: string } } & _HttpOpts): TThrow extends true ? Promise<{ id: string; status: "processing" }> : Promise<SDKResult<{ id: string; status: "processing" }, _Expand<_Errs12>>>
-		"get"(input: _Expand<_Inp7> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs26>>>
 		list(input: _Expand<_Inp5> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res9>> : Promise<SDKResult<_Expand<_Res9>, _Expand<_Errs34>>>
 		restore(input: { params: { project_id: string; table_id: string }; json: { slug?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs22>>>
+		retrieve(input: _Expand<_Inp7> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs26>>>
 		update(input: _Expand<_Inp10> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs24>>>
 	}
 	tableTemplate: {
 		create(input: _Expand<_Inp0> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res6>> : Promise<SDKResult<_Expand<_Res6>, _Expand<_Errs31>>>
 		"delete"(input: { params: { template_id: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res12>> : Promise<SDKResult<_Expand<_Res12>, _Expand<_Errs14>>>
 		listMine(input?: { search: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string; select?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res10>> : Promise<SDKResult<_Expand<_Res10>, _Expand<_Errs33>>>
-		projectGet(input: { params: { project_id: string; template_id: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res6>> : Promise<SDKResult<_Expand<_Res6>, _Expand<_Errs26>>>
 		projectList(input: _Expand<_Inp5> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res10>> : Promise<SDKResult<_Expand<_Res10>, _Expand<_Errs34>>>
+		projectRetrieve(input: { params: { project_id: string; template_id: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res6>> : Promise<SDKResult<_Expand<_Res6>, _Expand<_Errs26>>>
 		update(input: _Expand<_Inp13> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res6>> : Promise<SDKResult<_Expand<_Res6>, _Expand<_Errs15>>>
 		use(input: { params: { project_id: string; template_id: string }; json: { name: string; slug?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs13>>>
 	}
@@ -185,8 +185,8 @@ export interface AnyrowSDK<TThrow extends boolean = false> {
 		create(input: { params: { organization_id: string }; json: { events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]; name?: string; url: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res0>> : Promise<SDKResult<_Expand<_Res0>, _Expand<_Errs32>>>
 		"delete"(input: _Expand<_Inp1> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res12>> : Promise<SDKResult<_Expand<_Res12>, _Expand<_Errs29>>>
 		deliveries(input: _Expand<_Inp2> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res8>> : Promise<SDKResult<_Expand<_Res8>, _Expand<_Errs29>>>
-		"get"(input: _Expand<_Inp1> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res1>> : Promise<SDKResult<_Expand<_Res1>, _Expand<_Errs29>>>
 		list(input: { params: { organization_id: string }; search: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res11>> : Promise<SDKResult<_Expand<_Res11>, _Expand<_Errs33>>>
+		retrieve(input: _Expand<_Inp1> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res1>> : Promise<SDKResult<_Expand<_Res1>, _Expand<_Errs29>>>
 		rotateSecret(input: _Expand<_Inp1> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res0>> : Promise<SDKResult<_Expand<_Res0>, _Expand<_Errs28>>>
 		test(input: _Expand<_Inp1> & _HttpOpts): TThrow extends true ? Promise<{ http_status: number | null; response_body: string | null; status: "error" | "success" | "timeout" }> : Promise<SDKResult<{ http_status: number | null; response_body: string | null; status: "error" | "success" | "timeout" }, _Expand<_Errs27>>>
 		update(input: { params: { organization_id: string; id: string }; json: { active?: boolean; events?: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]; name?: string; url?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res1>> : Promise<SDKResult<_Expand<_Res1>, _Expand<_Errs28>>>
