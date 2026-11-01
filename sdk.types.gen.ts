@@ -1,194 +1,2530 @@
-type _ErrField = { error_key: string; message: string; path: string }
-type _ErrEnvelope<TStatus extends number, TKey extends string> = {
+import type {
+	RealtimeOptions,
+	Result,
+	ResumableConnection,
+	SDKConfig,
+	SSEEvent,
+	TypedWebSocket,
+} from "./sdk.runtime.gen"
+
+export type CreateOrganizationsWebhookRequest = {
+	events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]
+	name?: string
+	url: string
+}
+export type CreateOrganizationsWebhookResponse201 = {
+	active: boolean
+	created_at: number
+	events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]
+	failure_count: number
+	id: string
+	last_triggered_at: number | null
+	name: string | null
+	organization_id: string
+	secret: string
+	secret_rotated_at: number | null
+	updated_at: number
+	url: string
+}
+export type CreateOrganizationsWebhookResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "webhook_create_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateOrganizationsWebhooksTestResponse200 = {
+	http_status: number | null
+	response_body: string | null
+	status: "error" | "success" | "timeout"
+}
+export type CreateOrganizationsWebhooksTestResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "webhook_test_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateProjectsExtractRequest = {
+	columns?: string
+	file?: string
+	instruction?: string
+	schema?: string
+	strictness?: "strict" | "balanced" | "flexible"
+	text?: string
+}
+export type CreateProjectsExtractResponse200 = {
+	batch_id?: string
+	confidence: number | null
+	credits: number
+	duration_ms: number | null
+	fail_count: number
+	file_type?: "text_pdf" | "scanned" | "image" | "text" | "document" | "unknown" | null
+	files: {
+		confidence?: number | null
+		error?: unknown | null
+		file_name?: unknown | null
+		rows?: number | null
+		status?: string
+	}[]
+	result?: Record<string, unknown>
+	status: string
+	success_count: number
+	table_id: string
+	total_rows: number
+}
+export type CreateProjectsSuggestSchemaRequest = { file?: string; text?: string }
+export type CreateProjectsSuggestSchemaResponse200 = {
+	columns: { description?: string; name: string; type: string }[]
+	confidence: number
+	instruction?: string
+}
+export type CreateProjectsTableRequest = {
+	columns_json: {
+		currency_code?: string
+		default?: unknown
+		description?: string | null
+		id: string
+		instruction?: string | null
+		name: string
+		options?: string[]
+		required?: boolean
+		searchable?: boolean
+		type?:
+			| "array"
+			| "boolean"
+			| "currency"
+			| "date"
+			| "email"
+			| "enum"
+			| "multi_select"
+			| "number"
+			| "string"
+			| "text"
+			| "url"
+	}[]
+	insert_mode?: "append" | "dedup" | "merge" | "replace"
+	instruction?: string | null
+	merge_columns_json?: string[] | null
+	name: string
+	strictness?: "strict" | "balanced" | "flexible"
+}
+export type CreateProjectsTableResponse402 = {
+	error_key: "api_request_limit_exceeded" | "column_limit_reached" | "feature_not_available" | "table_plan_limit"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 402
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateProjectsTableTemplatesUseRequest = { name: string; slug?: string }
+export type CreateProjectsTableTemplatesUseResponse201 = {
+	columns_json: {
+		currency_code?: string
+		default?: unknown
+		description?: string | null
+		id: string
+		instruction?: string | null
+		name: string
+		options?: string[]
+		required: boolean
+		searchable?: boolean
+		type:
+			| "array"
+			| "boolean"
+			| "currency"
+			| "date"
+			| "email"
+			| "enum"
+			| "multi_select"
+			| "number"
+			| "string"
+			| "text"
+			| "url"
+	}[]
+	created_at: number
+	data_version: number
+	default_sort: string | null
+	deleted_at: number | null
+	fts_version: number
+	id: string
+	insert_mode: "append" | "dedup" | "merge" | "replace"
+	instruction: string | null
+	last_used_at: number | null
+	merge_columns_json: string[] | null
+	name: string
+	project_id: string
+	row_count: number
+	slug: string
+	strictness: "strict" | "balanced" | "flexible"
+	updated_at: number
+	usage_count: number
+}
+export type CreateProjectsTableTemplatesUseResponse402 = {
+	error_key: "api_request_limit_exceeded" | "feature_not_available" | "table_plan_limit"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 402
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateProjectsTablesColumnRequest = {
+	currency_code?: string
+	description?: string | null
+	instruction?: string | null
+	name: string
+	options?: string[]
+	required?: boolean
+	type?:
+		| "array"
+		| "boolean"
+		| "currency"
+		| "date"
+		| "email"
+		| "enum"
+		| "multi_select"
+		| "number"
+		| "string"
+		| "text"
+		| "url"
+}
+export type CreateProjectsTablesColumnResponse402 = {
+	error_key: "api_request_limit_exceeded" | "column_limit_reached" | "feature_not_available"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 402
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateProjectsTablesColumnResponse500 = {
+	error_key: "captcha_unavailable" | "column_add_failed" | "internal_server_error"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateProjectsTablesDuplicateRequest = { name: string; slug: string }
+export type CreateProjectsTablesDuplicateResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "table_duplicate_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateProjectsTablesRestoreRequest = { slug?: string }
+export type CreateProjectsTablesRestoreResponse410 = {
+	error_key: "table_delete_expired" | "table_soft_deleted"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 410
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateProjectsTablesRestoreResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "table_restore_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateProjectsTablesRowRequest = Record<string, unknown>
+export type CreateProjectsTablesRowRequestDbbb57 = {
+	creates?: Record<string, unknown>[]
+	deletes?: string[]
+	updates?: { data: Record<string, unknown>; id: string }[]
+}
+export type CreateProjectsTablesRowResponse200 = {
+	created?: Record<string, unknown>[]
+	deleted?: string[]
+	updated?: Record<string, unknown>[]
+}
+export type CreateProjectsTablesRowResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "row_create_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateProjectsTablesRowResponse500534f56 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "row_bulk_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type CreateTableTemplateRequest = {
+	category: string
+	columns_json: {
+		currency_code?: string
+		default?: unknown
+		description?: string | null
+		id: string
+		instruction?: string | null
+		name: string
+		options?: string[]
+		required?: boolean
+		searchable?: boolean
+		type?:
+			| "array"
+			| "boolean"
+			| "currency"
+			| "date"
+			| "email"
+			| "enum"
+			| "multi_select"
+			| "number"
+			| "string"
+			| "text"
+			| "url"
+	}[]
+	description?: string | null
+	insert_mode?: "append" | "dedup" | "merge" | "replace"
+	instruction?: string | null
+	merge_columns_json?: string[] | null
+	name: string
+	strictness?: "strict" | "balanced" | "flexible"
+}
+export type CreateTableTemplateResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "table_template_create_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type DeleteOrganizationsWebhookResponse200 = { id: string }
+export type DeleteProjectsTablesColumnResponse400 = {
+	error_key: "captcha_failed" | "captcha_required" | "column_minimum_required" | "invalid_input"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 400
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type DeleteProjectsTablesColumnResponse409 = {
+	error_key: "column_in_merge_key" | "optimistic_lock_conflict"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 409
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type DeleteProjectsTablesColumnResponse500 = {
+	error_key: "captcha_unavailable" | "column_remove_failed" | "internal_server_error"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type DeleteProjectsTablesRowResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "row_delete_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type DeleteTableTemplateResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "table_template_delete_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err400BatchNotCompleteCaptchaFailedCaptchaRequiredInvalidInput = {
+	error_key: "batch_not_complete" | "captcha_failed" | "captcha_required" | "invalid_input"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 400
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err400CaptchaFailedCaptchaRequiredInvalidInput = {
+	error_key: "captcha_failed" | "captcha_required" | "invalid_input"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 400
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err400CaptchaFailedCaptchaRequiredInvalidInputRowValidationFailed = {
+	error_key: "captcha_failed" | "captcha_required" | "invalid_input" | "row_validation_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 400
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err401ImpersonationEndedUnauthorized = {
+	error_key: "impersonation_ended" | "unauthorized"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 401
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err402ApiRequestLimitExceededCreditLimitExceededFeatureNotAvailableFileCountPlanLimitFileSizePlanLimitRowPlanLimit =
+	{
+		error_key:
+			| "api_request_limit_exceeded"
+			| "credit_limit_exceeded"
+			| "feature_not_available"
+			| "file_count_plan_limit"
+			| "file_size_plan_limit"
+			| "row_plan_limit"
+		fields: Record<string, { error_key: string; message: string; path: string }[]>
+		message: string
+		status: 402
+		status_key: string
+		success: false
+		vars?: Record<string, string | number>
+	}
+export type Err402ApiRequestLimitExceededCreditLimitExceededFeatureNotAvailableFileCountPlanLimitFileSizePlanLimitTablePlanLimit =
+	{
+		error_key:
+			| "api_request_limit_exceeded"
+			| "credit_limit_exceeded"
+			| "feature_not_available"
+			| "file_count_plan_limit"
+			| "file_size_plan_limit"
+			| "table_plan_limit"
+		fields: Record<string, { error_key: string; message: string; path: string }[]>
+		message: string
+		status: 402
+		status_key: string
+		success: false
+		vars?: Record<string, string | number>
+	}
+export type Err402ApiRequestLimitExceededFeatureNotAvailable = {
+	error_key: "api_request_limit_exceeded" | "feature_not_available"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 402
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err402ApiRequestLimitExceededFeatureNotAvailableRowPlanLimit = {
+	error_key: "api_request_limit_exceeded" | "feature_not_available" | "row_plan_limit"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 402
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err403EmailNotVerifiedForbiddenImpersonationForbiddenOrgSuspended = {
+	error_key: "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 403
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err403EmailNotVerifiedForbiddenImpersonationForbiddenOrgSuspendedTableTemplateForbidden = {
+	error_key:
+		| "email_not_verified"
+		| "forbidden"
+		| "impersonation_forbidden"
+		| "org_suspended"
+		| "table_template_forbidden"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 403
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err404BatchNotFoundBatchResultEmptyNotFound = {
+	error_key: "batch_not_found" | "batch_result_empty" | "not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err404ColumnNotFoundNotFoundTableNotFound = {
+	error_key: "column_not_found" | "not_found" | "table_not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err404NotFound = {
+	error_key: "not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err404NotFoundRowNotFoundTableNotFound = {
+	error_key: "not_found" | "row_not_found" | "table_not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err404NotFoundTableNotFound = {
+	error_key: "not_found" | "table_not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err404NotFoundTableTemplateNotFound = {
+	error_key: "not_found" | "table_template_not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err404NotFoundWebhookNotFound = {
+	error_key: "not_found" | "webhook_not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err408RequestTimeout = {
+	error_key: "request_timeout"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 408
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err409ColumnNameTakenOptimisticLockConflict = {
+	error_key: "column_name_taken" | "optimistic_lock_conflict"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 409
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err409TableProjectIdSlugDuplicate = {
+	error_key: "table_project_id_slug_duplicate"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 409
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err410TableSoftDeleted = {
+	error_key: "table_soft_deleted"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 410
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err413ContentTooLarge = {
+	error_key: "content_too_large"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 413
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err415UnsupportedMediaType = {
+	error_key: "unsupported_media_type"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 415
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err422ExtractionUnprocessableUnprocessableEntity = {
+	error_key: "extraction_unprocessable" | "unprocessable_entity"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 422
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err422UnprocessableEntity = {
+	error_key: "unprocessable_entity"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 422
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err429TooManyRequests = {
+	error_key: "too_many_requests"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 429
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err500BatchDownloadFailedCaptchaUnavailableInternalServerError = {
+	error_key: "batch_download_failed" | "captcha_unavailable" | "internal_server_error"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err500CaptchaUnavailableExtractionFailedInternalServerError = {
+	error_key: "captcha_unavailable" | "extraction_failed" | "internal_server_error"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err500CaptchaUnavailableInternalServerError = {
+	error_key: "captcha_unavailable" | "internal_server_error"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err500CaptchaUnavailableInternalServerErrorTableCreateFailed = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "table_create_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err500CaptchaUnavailableInternalServerErrorWebhookUpdateFailed = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "webhook_update_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err502BadGateway = {
+	error_key: "bad_gateway"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 502
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err502BadGatewayEmailSendFailed = {
+	error_key: "bad_gateway" | "email_send_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 502
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err503ExtractionUnavailableServiceUnavailable = {
+	error_key: "extraction_unavailable" | "service_unavailable"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 503
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err503ServiceUnavailable = {
+	error_key: "service_unavailable"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 503
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type Err504GatewayTimeout = {
+	error_key: "gateway_timeout"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 504
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type GetOrganizationsWebhookResponse200 = {
+	active: boolean
+	created_at: number
+	events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]
+	failure_count: number
+	id: string
+	last_triggered_at: number | null
+	name: string | null
+	organization_id: string
+	secret_rotated_at: number | null
+	updated_at: number
+	url: string
+}
+export type GetProjectsBatcheResponse200 = {
+	actor_id: string
+	actor_type: "user" | "api_key"
+	confidence: number | null
+	created_at: number
+	csv_key: string | null
+	current_file: string | null
+	duration_ms: number | null
+	error: string | null
+	extractions?: {
+		batch_id: string
+		confidence: number | null
+		created_at: number
+		error: string | null
+		file_checksum: string | null
+		file_key: string
+		file_name: string
+		file_type: "text_pdf" | "scanned" | "image" | "text" | "document" | "unknown" | null
+		id: string
+		row_count: number | null
+		rows_key: string | null
+		status: "pending" | "processing" | "complete" | "failed"
+		table_id: string | null
+	}[]
+	file_count: number
+	files_done: number
+	id: string
+	insert_mode: "append" | "dedup" | "merge" | "replace" | null
+	json_key: string | null
+	project_id: string
+	schema_json: {
+		columns: {
+			description?: string | null
+			instruction?: string | null
+			name: string
+			type:
+				| "array"
+				| "boolean"
+				| "currency"
+				| "date"
+				| "email"
+				| "enum"
+				| "multi_select"
+				| "number"
+				| "string"
+				| "text"
+				| "url"
+		}[]
+		instruction?: string | null
+		strictness: "strict" | "balanced" | "flexible"
+	}
+	status: "uploading" | "processing" | "merging" | "complete" | "partial" | "failed"
+	table_id: string | null
+	total_rows: number | null
+	updated_at: number
+	xlsx_key: string | null
+}
+export type GetProjectsBatcheResponse404 = {
+	error_key: "batch_not_found" | "not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type GetProjectsExportResponse200 = {
+	actor_id: string
+	checksum: string
+	created_at: number
+	csv_key: string | null
+	error: string | null
+	expires_at: number | null
+	filter_json: string | null
+	id: string
+	json_key: string | null
+	project_id: string
+	row_count: number | null
+	status: "processing" | "complete" | "failed"
+	table_id: string | null
+	updated_at: number
+	xlsx_key: string | null
+}
+export type GetProjectsExportResponse404 = {
+	error_key: "export_not_found" | "not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type GetProjectsTableTemplateResponse200 = {
+	category: string
+	columns_json: {
+		currency_code?: string
+		default?: unknown
+		description?: string | null
+		id: string
+		instruction?: string | null
+		name: string
+		options?: string[]
+		required: boolean
+		searchable?: boolean
+		type:
+			| "array"
+			| "boolean"
+			| "currency"
+			| "date"
+			| "email"
+			| "enum"
+			| "multi_select"
+			| "number"
+			| "string"
+			| "text"
+			| "url"
+	}[]
+	created_at: number
+	creator_display_name: string | null
+	creator_user_id: string | null
+	description: string | null
+	id: string
+	insert_mode: "append" | "dedup" | "merge" | "replace"
+	instruction: string | null
+	merge_columns_json: string[] | null
+	name: string
+	strictness: "strict" | "balanced" | "flexible"
+	updated_at: number
+	usage_count: number
+}
+export type ListOrganizationsWebhooksDeliveriesResponse200 = {
+	count: number | null
+	deliveries: {
+		attempt: number
+		created_at: number
+		delivered_at: number | null
+		event: "batch.complete" | "batch.failed" | "batch.partial" | "ping"
+		http_status: number | null
+		id: string
+		next_retry_at: number | null
+		payload_json: string
+		response_body: string | null
+		status: "pending" | "success" | "failed"
+		webhook_id: string
+	}[]
+	hasMore: boolean
+	limit: number
+	nextCursor: string | null
+	page: number | null
+}
+export type ListOrganizationsWebhooksResponse200 = {
+	count: number | null
+	hasMore: boolean
+	limit: number
+	nextCursor: string | null
+	page: number | null
+	webhooks: {
+		active: boolean
+		created_at: number
+		events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]
+		failure_count: number
+		id: string
+		last_triggered_at: number | null
+		name: string | null
+		organization_id: string
+		secret_rotated_at: number | null
+		updated_at: number
+		url: string
+	}[]
+}
+export type ListProjectsBatchesDownloadCsvResponse200 = string
+export type ListProjectsBatchesDownloadJsonResponse200 = {
+	batchId: string
+	rows: Record<string, unknown>[]
+	totalRows: number
+}
+export type ListProjectsBatchesDownloadXlsxResponse200 = unknown
+export type ListProjectsBatchesResponse200 = {
+	batches: {
+		actor_id: string
+		actor_type: "user" | "api_key"
+		confidence: number | null
+		created_at: number
+		csv_key: string | null
+		current_file: string | null
+		duration_ms: number | null
+		error: string | null
+		file_count: number
+		files_done: number
+		id: string
+		insert_mode: "append" | "dedup" | "merge" | "replace" | null
+		json_key: string | null
+		project_id: string
+		schema_json: {
+			columns: {
+				description?: string | null
+				instruction?: string | null
+				name: string
+				type:
+					| "array"
+					| "boolean"
+					| "currency"
+					| "date"
+					| "email"
+					| "enum"
+					| "multi_select"
+					| "number"
+					| "string"
+					| "text"
+					| "url"
+			}[]
+			instruction?: string | null
+			strictness: "strict" | "balanced" | "flexible"
+		}
+		status: "uploading" | "processing" | "merging" | "complete" | "partial" | "failed"
+		table_id: string | null
+		total_rows: number | null
+		updated_at: number
+		xlsx_key: string | null
+	}[]
+	count: number | null
+	hasMore: boolean
+	limit: number
+	nextCursor: string | null
+	page: number | null
+}
+export type ListProjectsTableTemplatesResponse200 = {
+	count: number | null
+	hasMore: boolean
+	limit: number
+	nextCursor: string | null
+	page: number | null
+	templates: {
+		category: string
+		columns_json: {
+			currency_code?: string
+			default?: unknown
+			description?: string | null
+			id: string
+			instruction?: string | null
+			name: string
+			options?: string[]
+			required: boolean
+			searchable?: boolean
+			type:
+				| "array"
+				| "boolean"
+				| "currency"
+				| "date"
+				| "email"
+				| "enum"
+				| "multi_select"
+				| "number"
+				| "string"
+				| "text"
+				| "url"
+		}[]
+		created_at: number
+		creator_display_name: string | null
+		creator_user_id: string | null
+		description: string | null
+		id: string
+		insert_mode: "append" | "dedup" | "merge" | "replace"
+		instruction: string | null
+		merge_columns_json: string[] | null
+		name: string
+		strictness: "strict" | "balanced" | "flexible"
+		updated_at: number
+		usage_count: number
+	}[]
+}
+export type ListProjectsTablesColumnsDistinctResponse200 = { values: (string | number | null)[] }
+export type ListProjectsTablesExportResponse200 = { id: string; status: "processing" }
+export type ListProjectsTablesExportResponse402 = {
+	error_key: "api_request_limit_exceeded" | "export_limit_exceeded" | "feature_not_available"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 402
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type ListProjectsTablesExportResponse500 = {
+	error_key: "captcha_unavailable" | "export_failed" | "internal_server_error"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type ListProjectsTablesResponse200 = {
+	count: number | null
+	hasMore: boolean
+	limit: number
+	nextCursor: string | null
+	page: number | null
+	tables: {
+		columns_json: {
+			currency_code?: string
+			default?: unknown
+			description?: string | null
+			id: string
+			instruction?: string | null
+			name: string
+			options?: string[]
+			required: boolean
+			searchable?: boolean
+			type:
+				| "array"
+				| "boolean"
+				| "currency"
+				| "date"
+				| "email"
+				| "enum"
+				| "multi_select"
+				| "number"
+				| "string"
+				| "text"
+				| "url"
+		}[]
+		created_at: number
+		data_version: number
+		default_sort: string | null
+		deleted_at: number | null
+		fts_version: number
+		id: string
+		insert_mode: "append" | "dedup" | "merge" | "replace"
+		instruction: string | null
+		last_used_at: number | null
+		merge_columns_json: string[] | null
+		name: string
+		project_id: string
+		row_count: number
+		slug: string
+		strictness: "strict" | "balanced" | "flexible"
+		updated_at: number
+		usage_count: number
+	}[]
+}
+export type ListProjectsTablesRowsResponse200 = {
+	count: number | null
+	hasMore: boolean
+	limit: number
+	nextCursor: string | null
+	page: number | null
+	rows: Record<string, unknown>[]
+}
+export type ListProjectsTablesRowsResponse20021d74b = Record<string, number | null>
+export type ListProjectsTablesRowsResponse400 = {
+	error_key: "captcha_failed" | "captcha_required" | "invalid_aggregation" | "invalid_filter" | "invalid_input"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 400
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type ListProjectsTablesRowsSourceResponse404 = {
+	error_key: "not_found" | "row_not_found" | "row_source_not_found" | "table_not_found"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 404
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type ReplaceProjectsTablesColumnRequest = { order: string[] }
+export type ReplaceProjectsTablesColumnResponse400 = {
+	error_key: "captcha_failed" | "captcha_required" | "column_reorder_mismatch" | "invalid_input"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 400
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type ReplaceProjectsTablesColumnResponse409 = {
+	error_key: "optimistic_lock_conflict"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 409
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type UpdateOrganizationsWebhookRequest = {
+	active?: boolean
+	events?: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]
+	name?: string
+	url?: string
+}
+export type UpdateProjectsTableRequest = {
+	default_sort?: string | null
+	insert_mode?: "append" | "dedup" | "merge" | "replace"
+	instruction?: string | null
+	merge_columns_json?: string[] | null
+	name?: string
+	slug?: string
+	strictness?: "strict" | "balanced" | "flexible"
+}
+export type UpdateProjectsTableResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "table_update_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type UpdateProjectsTablesColumnRequest = {
+	description?: string | null
+	instruction?: string | null
+	name?: string
+	options?: string[]
+	required?: boolean
+	searchable?: boolean
+	type?:
+		| "array"
+		| "boolean"
+		| "currency"
+		| "date"
+		| "email"
+		| "enum"
+		| "multi_select"
+		| "number"
+		| "string"
+		| "text"
+		| "url"
+}
+export type UpdateProjectsTablesColumnResponse422 = {
+	error_key: "column_retype_too_large" | "unprocessable_entity"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 422
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type UpdateProjectsTablesColumnResponse500 = {
+	error_key: "captcha_unavailable" | "column_rename_failed" | "internal_server_error"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type UpdateProjectsTablesRowResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "row_update_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+export type UpdateTableTemplateRequest = {
+	category?: string
+	columns_json?: {
+		currency_code?: string
+		default?: unknown
+		description?: string | null
+		id: string
+		instruction?: string | null
+		name: string
+		options?: string[]
+		required?: boolean
+		searchable?: boolean
+		type?:
+			| "array"
+			| "boolean"
+			| "currency"
+			| "date"
+			| "email"
+			| "enum"
+			| "multi_select"
+			| "number"
+			| "string"
+			| "text"
+			| "url"
+	}[]
+	description?: string | null
+	insert_mode?: "append" | "dedup" | "merge" | "replace"
+	instruction?: string | null
+	merge_columns_json?: string[] | null
+	name?: string
+	strictness?: "strict" | "balanced" | "flexible"
+}
+export type UpdateTableTemplateResponse500 = {
+	error_key: "captcha_unavailable" | "internal_server_error" | "table_template_update_failed"
+	fields: Record<string, { error_key: string; message: string; path: string }[]>
+	message: string
+	status: 500
+	status_key: string
+	success: false
+	vars?: Record<string, string | number>
+}
+
+export type HttpOptions = {
+	baseURL?: string
+	cookies?: Record<string, string>
+	headers?: Record<string, string>
+	idempotencyKey?: string
+	signal?: AbortSignal
+	timeout?: number
+}
+export type SseOptions = Omit<HttpOptions, "idempotencyKey"> & { lastEventId?: string }
+export type WsOptions = { protocols?: string | string[]; reconnectToken?: string }
+export type RealtimeCallOptions = Omit<HttpOptions, "idempotencyKey" | "timeout"> & RealtimeOptions
+
+type ErrorField = { error_key: string; message: string; path: string }
+
+/** honey's error envelope at one status, its error keys as literals. */
+export type ErrorEnvelope<TStatus extends number, TKey extends string> = {
 	error_key: TKey
-	fields: Record<string, _ErrField[]>
+	fields: Record<string, ErrorField[]>
 	message: string
 	status: TStatus
 	status_key: string
 	success: false
 }
 
-type _Errs0 = { 400: _ErrEnvelope<400, "batch_not_complete" | "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "batch_not_found" | "batch_result_empty" | "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "batch_download_failed" | "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs1 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "column_minimum_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "column_not_found" | "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 409: _ErrEnvelope<409, "column_in_merge_key" | "optimistic_lock_conflict">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "column_remove_failed" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs2 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "column_reorder_mismatch" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "column_not_found" | "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 409: _ErrEnvelope<409, "optimistic_lock_conflict">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs3 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_aggregation" | "invalid_filter" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs4 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input" | "row_validation_failed">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available" | "row_plan_limit">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "row_bulk_failed">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs5 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input" | "row_validation_failed">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available" | "row_plan_limit">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "row_create_failed">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs6 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input" | "row_validation_failed">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "column_not_found" | "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 409: _ErrEnvelope<409, "column_name_taken" | "optimistic_lock_conflict">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "column_retype_too_large" | "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "column_rename_failed" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs7 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input" | "row_validation_failed">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "row_not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "row_update_failed">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs8 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "column_limit_reached" | "feature_not_available" | "table_plan_limit">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_create_failed">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs9 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "column_limit_reached" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 409: _ErrEnvelope<409, "column_name_taken" | "optimistic_lock_conflict">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "column_add_failed" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs10 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "credit_limit_exceeded" | "feature_not_available" | "file_count_plan_limit" | "file_size_plan_limit" | "row_plan_limit">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "extraction_unprocessable" | "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "extraction_failed" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "extraction_unavailable" | "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs11 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "credit_limit_exceeded" | "feature_not_available" | "file_count_plan_limit" | "file_size_plan_limit" | "table_plan_limit">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "extraction_unprocessable" | "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "extraction_failed" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "extraction_unavailable" | "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs12 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "export_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "export_failed" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs13 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available" | "table_plan_limit">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 409: _ErrEnvelope<409, "table_project_id_slug_duplicate">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_create_failed">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs14 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended" | "table_template_forbidden">; 404: _ErrEnvelope<404, "not_found" | "table_template_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_template_delete_failed">; 502: _ErrEnvelope<502, "bad_gateway" | "email_send_failed">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs15 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended" | "table_template_forbidden">; 404: _ErrEnvelope<404, "not_found" | "table_template_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_template_update_failed">; 502: _ErrEnvelope<502, "bad_gateway" | "email_send_failed">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs16 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "batch_not_found" | "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs17 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "column_not_found" | "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs18 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "export_not_found" | "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs19 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "row_not_found" | "row_source_not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs20 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "row_not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "row_delete_failed">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs21 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "row_not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs22 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 409: _ErrEnvelope<409, "table_project_id_slug_duplicate">; 410: _ErrEnvelope<410, "table_delete_expired" | "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_restore_failed">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs23 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 409: _ErrEnvelope<409, "table_project_id_slug_duplicate">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_duplicate_failed">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs24 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 409: _ErrEnvelope<409, "table_project_id_slug_duplicate">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_update_failed">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs25 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 410: _ErrEnvelope<410, "table_soft_deleted">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs26 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "table_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs27 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "webhook_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "webhook_test_failed">; 502: _ErrEnvelope<502, "bad_gateway" | "email_send_failed">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs28 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "webhook_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "webhook_update_failed">; 502: _ErrEnvelope<502, "bad_gateway" | "email_send_failed">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs29 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found" | "webhook_not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway" | "email_send_failed">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs30 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "extraction_failed" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs31 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_template_create_failed">; 502: _ErrEnvelope<502, "bad_gateway" | "email_send_failed">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs32 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error" | "webhook_create_failed">; 502: _ErrEnvelope<502, "bad_gateway" | "email_send_failed">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs33 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway" | "email_send_failed">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
-type _Errs34 = { 400: _ErrEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">; 401: _ErrEnvelope<401, "impersonation_ended" | "unauthorized">; 402: _ErrEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">; 403: _ErrEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">; 404: _ErrEnvelope<404, "not_found">; 408: _ErrEnvelope<408, "request_timeout">; 413: _ErrEnvelope<413, "content_too_large">; 415: _ErrEnvelope<415, "unsupported_media_type">; 422: _ErrEnvelope<422, "unprocessable_entity">; 429: _ErrEnvelope<429, "too_many_requests">; 500: _ErrEnvelope<500, "captcha_unavailable" | "internal_server_error">; 502: _ErrEnvelope<502, "bad_gateway">; 503: _ErrEnvelope<503, "service_unavailable">; 504: _ErrEnvelope<504, "gateway_timeout"> }
+/* a call's declared errors and headers, which only its safe twin reads: a type, never a value */
+declare const answer: unique symbol
 
-type _ExpandShallow<T> = T extends object ? { [K in keyof T]: T[K] } & {} : T
-type _Expand<T> = T extends object ? { [K in keyof T]: _ExpandShallow<T[K]> } & {} : T
-type _Res0 = { active: boolean; created_at: number; events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]; failure_count: number; id: string; last_triggered_at: number | null; name: string | null; organization_id: string; secret: string; secret_rotated_at: number | null; updated_at: number; url: string }
-type _Res1 = { active: boolean; created_at: number; events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]; failure_count: number; id: string; last_triggered_at: number | null; name: string | null; organization_id: string; secret_rotated_at: number | null; updated_at: number; url: string }
-type _Res2 = { actor_id: string; actor_type: "user" | "api_key"; confidence: number | null; created_at: number; csv_key: string | null; current_file: string | null; duration_ms: number | null; error: string | null; extractions?: { batch_id: string; confidence: number | null; created_at: number; error: string | null; file_checksum: string | null; file_key: string; file_name: string; file_type: "text_pdf" | "scanned" | "image" | "text" | "document" | "unknown" | null; id: string; row_count: number | null; rows_key: string | null; status: "pending" | "processing" | "complete" | "failed"; table_id: string | null }[]; file_count: number; files_done: number; id: string; insert_mode: "append" | "dedup" | "merge" | "replace" | null; json_key: string | null; project_id: string; schema_json: { columns: { description?: string | null; instruction?: string | null; name: string; "type": "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" }[]; instruction?: string | null; strictness: "strict" | "balanced" | "flexible" }; status: "uploading" | "processing" | "merging" | "complete" | "partial" | "failed"; table_id: string | null; total_rows: number | null; updated_at: number; xlsx_key: string | null }
-type _Res3 = { actor_id: string; checksum: string; created_at: number; csv_key: string | null; error: string | null; expires_at: number | null; filter_json: string | null; id: string; json_key: string | null; project_id: string; row_count: number | null; status: "processing" | "complete" | "failed"; table_id: string | null; updated_at: number; xlsx_key: string | null }
-type _Res4 = { batch_id?: string; confidence: number | null; credits: number; duration_ms: number | null; fail_count: number; file_type?: "text_pdf" | "scanned" | "image" | "text" | "document" | "unknown" | null; files: { confidence?: number | null; error?: unknown | null; file_name?: unknown | null; rows?: number | null; status?: string }[]; result?: Record<string, unknown>; status: string; success_count: number; table_id: string; total_rows: number }
-type _Res5 = { batches: { actor_id: string; actor_type: "user" | "api_key"; confidence: number | null; created_at: number; csv_key: string | null; current_file: string | null; duration_ms: number | null; error: string | null; file_count: number; files_done: number; id: string; insert_mode: "append" | "dedup" | "merge" | "replace" | null; json_key: string | null; project_id: string; schema_json: { columns: { description?: string | null; instruction?: string | null; name: string; "type": "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" }[]; instruction?: string | null; strictness: "strict" | "balanced" | "flexible" }; status: "uploading" | "processing" | "merging" | "complete" | "partial" | "failed"; table_id: string | null; total_rows: number | null; updated_at: number; xlsx_key: string | null }[]; count: number | null; hasMore: boolean; limit: number; nextCursor: string | null; page: number | null }
-type _Res6 = { category: string; columns_json: { currency_code?: string; "default"?: unknown; description?: string | null; id: string; instruction?: string | null; name: string; options?: string[]; required: boolean; searchable?: boolean; "type": "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" }[]; created_at: number; creator_display_name: string | null; creator_user_id: string | null; description: string | null; id: string; insert_mode: "append" | "dedup" | "merge" | "replace"; instruction: string | null; merge_columns_json: string[] | null; name: string; strictness: "strict" | "balanced" | "flexible"; updated_at: number; usage_count: number }
-type _Res7 = { columns_json: { currency_code?: string; "default"?: unknown; description?: string | null; id: string; instruction?: string | null; name: string; options?: string[]; required: boolean; searchable?: boolean; "type": "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" }[]; created_at: number; data_version: number; default_sort: string | null; deleted_at: number | null; fts_version: number; id: string; insert_mode: "append" | "dedup" | "merge" | "replace"; instruction: string | null; last_used_at: number | null; merge_columns_json: string[] | null; name: string; project_id: string; row_count: number; slug: string; strictness: "strict" | "balanced" | "flexible"; updated_at: number; usage_count: number }
-type _Res8 = { count: number | null; deliveries: { attempt: number; created_at: number; delivered_at: number | null; event: "batch.complete" | "batch.failed" | "batch.partial" | "ping"; http_status: number | null; id: string; next_retry_at: number | null; payload_json: string; response_body: string | null; status: "pending" | "success" | "failed"; webhook_id: string }[]; hasMore: boolean; limit: number; nextCursor: string | null; page: number | null }
-type _Res9 = { count: number | null; hasMore: boolean; limit: number; nextCursor: string | null; page: number | null; tables: { columns_json: { currency_code?: string; "default"?: unknown; description?: string | null; id: string; instruction?: string | null; name: string; options?: string[]; required: boolean; searchable?: boolean; "type": "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" }[]; created_at: number; data_version: number; default_sort: string | null; deleted_at: number | null; fts_version: number; id: string; insert_mode: "append" | "dedup" | "merge" | "replace"; instruction: string | null; last_used_at: number | null; merge_columns_json: string[] | null; name: string; project_id: string; row_count: number; slug: string; strictness: "strict" | "balanced" | "flexible"; updated_at: number; usage_count: number }[] }
-type _Res10 = { count: number | null; hasMore: boolean; limit: number; nextCursor: string | null; page: number | null; templates: { category: string; columns_json: { currency_code?: string; "default"?: unknown; description?: string | null; id: string; instruction?: string | null; name: string; options?: string[]; required: boolean; searchable?: boolean; "type": "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" }[]; created_at: number; creator_display_name: string | null; creator_user_id: string | null; description: string | null; id: string; insert_mode: "append" | "dedup" | "merge" | "replace"; instruction: string | null; merge_columns_json: string[] | null; name: string; strictness: "strict" | "balanced" | "flexible"; updated_at: number; usage_count: number }[] }
-type _Res11 = { count: number | null; hasMore: boolean; limit: number; nextCursor: string | null; page: number | null; webhooks: { active: boolean; created_at: number; events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]; failure_count: number; id: string; last_triggered_at: number | null; name: string | null; organization_id: string; secret_rotated_at: number | null; updated_at: number; url: string }[] }
-type _Res12 = { id: string }
-type _Inp0 = { json: { category: string; columns_json: { currency_code?: string; "default"?: unknown; description?: string | null; id: string; instruction?: string | null; name: string; options?: string[]; required?: boolean; searchable?: boolean; "type"?: "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" }[]; description?: string | null; insert_mode?: "append" | "dedup" | "merge" | "replace"; instruction?: string | null; merge_columns_json?: string[] | null; name: string; strictness?: "strict" | "balanced" | "flexible" } }
-type _Inp1 = { params: { organization_id: string; id: string } }
-type _Inp2 = { params: { organization_id: string; id: string }; search: { cursor?: string; event?: "batch.complete" | "batch.failed" | "batch.partial" | "ping"; limit?: number; order?: string; page?: number; status?: "pending" | "success" | "failed" } }
-type _Inp3 = { params: { project_id: string }; form: { columns?: string; file?: Blob; instruction?: string; schema?: string; strictness?: "strict" | "balanced" | "flexible"; text?: string } }
-type _Inp4 = { params: { project_id: string }; json: { columns_json: { currency_code?: string; "default"?: unknown; description?: string | null; id: string; instruction?: string | null; name: string; options?: string[]; required?: boolean; searchable?: boolean; "type"?: "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" }[]; insert_mode?: "append" | "dedup" | "merge" | "replace"; instruction?: string | null; merge_columns_json?: string[] | null; name: string; strictness?: "strict" | "balanced" | "flexible" } }
-type _Inp5 = { params: { project_id: string }; search: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string } }
-type _Inp6 = { params: { project_id: string; batch_id: string } }
-type _Inp7 = { params: { project_id: string; table_id: string } }
-type _Inp8 = { params: { project_id: string; table_id: string }; form: { file?: Blob; text?: string } }
-type _Inp9 = { params: { project_id: string; table_id: string }; json: { currency_code?: string; description?: string | null; instruction?: string | null; name: string; options?: string[]; required?: boolean; "type"?: "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" } }
-type _Inp10 = { params: { project_id: string; table_id: string }; json: { default_sort?: string | null; insert_mode?: "append" | "dedup" | "merge" | "replace"; instruction?: string | null; merge_columns_json?: string[] | null; name?: string; slug?: string; strictness?: "strict" | "balanced" | "flexible" } }
-type _Inp11 = { params: { project_id: string; table_id: string; col_id: string }; json: { description?: string | null; instruction?: string | null; name?: string; options?: string[]; required?: boolean; searchable?: boolean; "type"?: "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" } }
-type _Inp12 = { params: { project_id: string; table_id: string; row_id: string } }
-type _Inp13 = { params: { template_id: string }; json: { category?: string; columns_json?: { currency_code?: string; "default"?: unknown; description?: string | null; id: string; instruction?: string | null; name: string; options?: string[]; required?: boolean; searchable?: boolean; "type"?: "array" | "boolean" | "currency" | "date" | "email" | "enum" | "multi_select" | "number" | "string" | "text" | "url" }[]; description?: string | null; insert_mode?: "append" | "dedup" | "merge" | "replace"; instruction?: string | null; merge_columns_json?: string[] | null; name?: string; strictness?: "strict" | "balanced" | "flexible" } }
+/** A call's input: optional when none of its fields is required. */
+type HoneyArgs<I, O> = {} extends I ? [input?: I & O] : [input: I & O]
 
-export type SDKResult<T, TErrorsByStatus = never> =
-	| { data: T; error: null; response: Response; status: number }
-	| ([TErrorsByStatus] extends [never]
-		? { data: null; error: unknown; response: Response; status: number }
-		: { [S in keyof TErrorsByStatus & number]: { data: null; error: TErrorsByStatus[S]; response: Response; status: S } }[keyof TErrorsByStatus & number])
-
-export type TypedWebSocket = {
-	close(code?: number, reason?: string): void
-	off(event: "close" | "error" | "message" | "open", handler: (...args: never[]) => void): void
-	on(event: "close", handler: (code: number, reason: string) => void): void
-	on(event: "error", handler: (error: unknown) => void): void
-	on(event: "message", handler: (data: string) => void): void
-	on(event: "open", handler: () => void): void
-	readonly readyState: number
-	send(data: ArrayBuffer | ArrayBufferView | object | string): void
+/** A REST operation: its raw overload and its value, an error status thrown; its declared errors and headers. */
+type HoneyCall<I, D, E = never, H = never> = {
+	(input: I & HttpOptions & { raw: true }): Promise<Response>
+	(...input: HoneyArgs<I, HttpOptions & { raw?: false }>): Promise<D>
+	readonly [answer]?: [E, H]
 }
 
-export type AnyrowSDKConfig<TThrow extends boolean = false> = {
-	baseURL: string
-	buildSearchParams?: (query: Record<string, unknown>) => URLSearchParams
-	credentials?: RequestCredentials
-	fetch?: typeof fetch
-	headers?: Record<string, string> | ((ctx: { method: string; path: string }) => Record<string, string | undefined> | Promise<Record<string, string | undefined>>)
-	invalidation?: { maxSourcesPerTarget?: number; staleMaxEntries?: number; staleTime: number }
-	maxErrorMessageChars?: number
-	mode?: RequestMode
-	onRequest?: Array<(ctx: { body?: BodyInit; headers: Headers; invalidatedBy?: string[]; isStale?: boolean; method: string; path: string; selector?: string; state: Record<string, unknown>; url: string }) => void | Promise<void>>
-	onResponse?: Array<(ctx: { invalidatedBy?: string[]; isRetry: boolean; isStale?: boolean; method: string; path: string; request: Request; response: Response; retry: () => Promise<Response>; selector?: string; state: Record<string, unknown>; url: string }) => Response | undefined | Promise<Response | undefined>>
-	onAuthExpired?: (ctx: { rejectedToken: string | null }) => Promise<string | null>
-	authHeaderName?: string
-	authHeaderPrefix?: string
-	onLog?: (entry: _LogEntry) => void
-	redirect?: "error" | "follow" | "manual" | "same-origin"
-	sortSearchParams?: boolean
-	sseMaxBufferChars?: number
-	state?: Record<string, unknown>
-	throwOnError?: TThrow
-	timeout?: number
+/** An event stream, sent when its iteration starts; its opening answer's declared errors. */
+type HoneyStream<I, V, E = never> = {
+	(...input: HoneyArgs<I, SseOptions>): AsyncIterable<V>
+	readonly [answer]?: [E, never]
 }
 
-export type _LogEntry = { level: "debug" | "info" | "warn" | "error"; event: "request_start" | "response_received" | "error" | "hook_executed"; operation: string; duration_ms: number; status?: number; error?: unknown }
-export type _HttpOpts = { cookies?: Record<string, string>; headers?: Record<string, string>; idempotencyKey?: string; signal?: AbortSignal; timeout?: number }
-export type _SseOpts = { cookies?: Record<string, string>; headers?: Record<string, string>; lastEventId?: string; signal?: AbortSignal; timeout?: number }
-export type _WsOpts = { protocols?: string | string[]; reconnectToken?: string }
+/** `client.safe`: every REST and stream call answering a Result, never throwing an API answer; a connection as is. */
+export type HoneySafe<T> = {
+	[K in keyof T]: T[K] extends (...input: never[]) => ResumableConnection<infer _> | TypedWebSocket
+		? T[K]
+		: T[K] extends HoneyCall<infer I, infer D, infer E, infer H>
+			? {
+					(input: I & HttpOptions & { raw: true }): Promise<Result<Response, E>>
+					(...input: HoneyArgs<I, HttpOptions & { raw?: false }>): Promise<Result<D, E, H>>
+				}
+			: T[K] extends HoneyStream<infer I, infer V, infer E>
+				? (...input: HoneyArgs<I, SseOptions>) => Promise<Result<AsyncIterable<V>, E>>
+				: HoneySafe<T[K]>
+}
 
-export interface AnyrowSDK<TThrow extends boolean = false> {
-	state: Record<string, unknown>
-	dispose(): void
+export type AnyrowSDKConfig = Omit<SDKConfig, "baseURL"> & {
+	/** Default: the document's first server, /api */
+	baseURL?: string
+}
+
+/** Every operation of the SDK, by its member path. */
+export interface AnyrowSDKOperations {
 	batch: {
-		list(input: { params: { project_id: string }; search: { cursor?: string; limit?: number; order?: string; page?: number; status?: "uploading" | "processing" | "merging" | "complete" | "partial" | "failed" } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res5>> : Promise<SDKResult<_Expand<_Res5>, _Expand<_Errs34>>>
-		retrieve(input: _Expand<_Inp6> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res2>> : Promise<SDKResult<_Expand<_Res2>, _Expand<_Errs16>>>
 		download: {
-			csv(input: _Expand<_Inp6> & _HttpOpts): TThrow extends true ? Promise<string> : Promise<SDKResult<string, _Expand<_Errs0>>>
-			json(input: _Expand<_Inp6> & _HttpOpts): TThrow extends true ? Promise<{ batchId: string; rows: Record<string, unknown>[]; totalRows: number }> : Promise<SDKResult<{ batchId: string; rows: Record<string, unknown>[]; totalRows: number }, _Expand<_Errs0>>>
-			xlsx(input: _Expand<_Inp6> & _HttpOpts): TThrow extends true ? Promise<ArrayBuffer> : Promise<SDKResult<ArrayBuffer, _Expand<_Errs0>>>
+			/**
+			 * Download batch CSV
+			 */
+			csv: HoneyCall<
+				{ params: { batch_id: string; project_id: string } },
+				string,
+				{
+					400: ErrorEnvelope<400, "batch_not_complete" | "captcha_failed" | "captcha_required" | "invalid_input">
+					401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+					402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+					403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+					404: ErrorEnvelope<404, "batch_not_found" | "batch_result_empty" | "not_found">
+					408: ErrorEnvelope<408, "request_timeout">
+					413: ErrorEnvelope<413, "content_too_large">
+					415: ErrorEnvelope<415, "unsupported_media_type">
+					422: ErrorEnvelope<422, "unprocessable_entity">
+					429: ErrorEnvelope<429, "too_many_requests">
+					500: ErrorEnvelope<500, "batch_download_failed" | "captcha_unavailable" | "internal_server_error">
+					502: ErrorEnvelope<502, "bad_gateway">
+					503: ErrorEnvelope<503, "service_unavailable">
+					504: ErrorEnvelope<504, "gateway_timeout">
+				}
+			>
+			/**
+			 * Download batch JSON
+			 */
+			json: HoneyCall<
+				{ params: { batch_id: string; project_id: string } },
+				ListProjectsBatchesDownloadJsonResponse200,
+				{
+					400: ErrorEnvelope<400, "batch_not_complete" | "captcha_failed" | "captcha_required" | "invalid_input">
+					401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+					402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+					403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+					404: ErrorEnvelope<404, "batch_not_found" | "batch_result_empty" | "not_found">
+					408: ErrorEnvelope<408, "request_timeout">
+					413: ErrorEnvelope<413, "content_too_large">
+					415: ErrorEnvelope<415, "unsupported_media_type">
+					422: ErrorEnvelope<422, "unprocessable_entity">
+					429: ErrorEnvelope<429, "too_many_requests">
+					500: ErrorEnvelope<500, "batch_download_failed" | "captcha_unavailable" | "internal_server_error">
+					502: ErrorEnvelope<502, "bad_gateway">
+					503: ErrorEnvelope<503, "service_unavailable">
+					504: ErrorEnvelope<504, "gateway_timeout">
+				}
+			>
+			/**
+			 * Download batch XLSX
+			 */
+			xlsx: HoneyCall<
+				{ params: { batch_id: string; project_id: string } },
+				Uint8Array<ArrayBuffer>,
+				{
+					400: ErrorEnvelope<400, "batch_not_complete" | "captcha_failed" | "captcha_required" | "invalid_input">
+					401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+					402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+					403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+					404: ErrorEnvelope<404, "batch_not_found" | "batch_result_empty" | "not_found">
+					408: ErrorEnvelope<408, "request_timeout">
+					413: ErrorEnvelope<413, "content_too_large">
+					415: ErrorEnvelope<415, "unsupported_media_type">
+					422: ErrorEnvelope<422, "unprocessable_entity">
+					429: ErrorEnvelope<429, "too_many_requests">
+					500: ErrorEnvelope<500, "batch_download_failed" | "captcha_unavailable" | "internal_server_error">
+					502: ErrorEnvelope<502, "bad_gateway">
+					503: ErrorEnvelope<503, "service_unavailable">
+					504: ErrorEnvelope<504, "gateway_timeout">
+				}
+			>
 		}
+		/**
+		 * List batches
+		 */
+		list: HoneyCall<
+			{
+				params: { project_id: string }
+				search?: {
+					cursor?: string
+					limit?: number
+					order?: string
+					page?: number
+					status?: "uploading" | "processing" | "merging" | "complete" | "partial" | "failed"
+				}
+			},
+			ListProjectsBatchesResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Get batch
+		 */
+		retrieve: HoneyCall<
+			{ params: { batch_id: string; project_id: string } },
+			GetProjectsBatcheResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "batch_not_found" | "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
 	}
 	column: {
-		add(input: _Expand<_Inp9> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs9>>>
-		distinct(input: { params: { project_id: string; table_id: string; col_id: string }; search: { limit?: number; q?: string } } & _HttpOpts): TThrow extends true ? Promise<{ values: (string | number | null)[] }> : Promise<SDKResult<{ values: (string | number | null)[] }, _Expand<_Errs17>>>
-		remove(input: { params: { project_id: string; table_id: string; col_id: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs1>>>
-		reorder(input: { params: { project_id: string; table_id: string }; json: { order: string[] } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs2>>>
-		update(input: _Expand<_Inp11> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs6>>>
+		/**
+		 * Add column
+		 */
+		add: HoneyCall<
+			{ params: { project_id: string; table_id: string }; json: CreateProjectsTablesColumnRequest },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "column_limit_reached" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				409: ErrorEnvelope<409, "column_name_taken" | "optimistic_lock_conflict">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "column_add_failed" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Get distinct column values
+		 */
+		distinct: HoneyCall<
+			{ params: { col_id: string; project_id: string; table_id: string }; search?: { limit?: number; q?: string } },
+			ListProjectsTablesColumnsDistinctResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "column_not_found" | "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Remove column
+		 */
+		remove: HoneyCall<
+			{ params: { col_id: string; project_id: string; table_id: string } },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "column_minimum_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "column_not_found" | "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				409: ErrorEnvelope<409, "column_in_merge_key" | "optimistic_lock_conflict">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "column_remove_failed" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Reorder columns
+		 */
+		reorder: HoneyCall<
+			{ params: { project_id: string; table_id: string }; json: ReplaceProjectsTablesColumnRequest },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "column_reorder_mismatch" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "column_not_found" | "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				409: ErrorEnvelope<409, "optimistic_lock_conflict">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Update column
+		 */
+		update: HoneyCall<
+			{ params: { col_id: string; project_id: string; table_id: string }; json: UpdateProjectsTablesColumnRequest },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input" | "row_validation_failed">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "column_not_found" | "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				409: ErrorEnvelope<409, "column_name_taken" | "optimistic_lock_conflict">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "column_retype_too_large" | "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "column_rename_failed" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
 	}
-	"export": {
-		retrieve(input: { params: { project_id: string; export_id: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res3>> : Promise<SDKResult<_Expand<_Res3>, _Expand<_Errs18>>>
+	export: {
+		/**
+		 * Get export status
+		 */
+		retrieve: HoneyCall<
+			{ params: { export_id: string; project_id: string } },
+			GetProjectsExportResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "export_not_found" | "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
 	}
 	extract: {
-		once(input: _Expand<_Inp3> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res4>> : Promise<SDKResult<_Expand<_Res4>, _Expand<_Errs11>>>
-		stream(input: _Expand<_Inp3> & _SseOpts): AsyncIterable<{ data: string; event?: string; id?: string; retry?: number }>
+		/**
+		 * Extract data from text or file (JSON response)
+		 */
+		once: HoneyCall<
+			{
+				params: { project_id: string }
+				form: {
+					columns?: string
+					file?: Blob
+					instruction?: string
+					schema?: string
+					strictness?: "strict" | "balanced" | "flexible"
+					text?: string
+				}
+			},
+			CreateProjectsExtractResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<
+					402,
+					| "api_request_limit_exceeded"
+					| "credit_limit_exceeded"
+					| "feature_not_available"
+					| "file_count_plan_limit"
+					| "file_size_plan_limit"
+					| "table_plan_limit"
+				>
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "extraction_unprocessable" | "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "extraction_failed" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "extraction_unavailable" | "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Extract data from text or file (SSE stream)
+		 */
+		stream: HoneyStream<
+			{
+				params: { project_id: string }
+				form: {
+					columns?: string
+					file?: Blob
+					instruction?: string
+					schema?: string
+					strictness?: "strict" | "balanced" | "flexible"
+					text?: string
+				}
+			},
+			SSEEvent,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<
+					402,
+					| "api_request_limit_exceeded"
+					| "credit_limit_exceeded"
+					| "feature_not_available"
+					| "file_count_plan_limit"
+					| "file_size_plan_limit"
+					| "table_plan_limit"
+				>
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "extraction_unprocessable" | "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "extraction_failed" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "extraction_unavailable" | "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
 		table: {
-			once(input: _Expand<_Inp8> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res4>> : Promise<SDKResult<_Expand<_Res4>, _Expand<_Errs10>>>
-			stream(input: _Expand<_Inp8> & _SseOpts): AsyncIterable<{ data: string; event?: string; id?: string; retry?: number }>
+			/**
+			 * Extract into table (JSON response)
+			 */
+			once: HoneyCall<
+				{ params: { project_id: string; table_id: string }; form: { file?: Blob; text?: string } },
+				CreateProjectsExtractResponse200,
+				{
+					400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+					401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+					402: ErrorEnvelope<
+						402,
+						| "api_request_limit_exceeded"
+						| "credit_limit_exceeded"
+						| "feature_not_available"
+						| "file_count_plan_limit"
+						| "file_size_plan_limit"
+						| "row_plan_limit"
+					>
+					403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+					404: ErrorEnvelope<404, "not_found" | "table_not_found">
+					408: ErrorEnvelope<408, "request_timeout">
+					410: ErrorEnvelope<410, "table_soft_deleted">
+					413: ErrorEnvelope<413, "content_too_large">
+					415: ErrorEnvelope<415, "unsupported_media_type">
+					422: ErrorEnvelope<422, "extraction_unprocessable" | "unprocessable_entity">
+					429: ErrorEnvelope<429, "too_many_requests">
+					500: ErrorEnvelope<500, "captcha_unavailable" | "extraction_failed" | "internal_server_error">
+					502: ErrorEnvelope<502, "bad_gateway">
+					503: ErrorEnvelope<503, "extraction_unavailable" | "service_unavailable">
+					504: ErrorEnvelope<504, "gateway_timeout">
+				}
+			>
+			/**
+			 * Extract into table (SSE stream)
+			 */
+			stream: HoneyStream<
+				{ params: { project_id: string; table_id: string }; form: { file?: Blob; text?: string } },
+				SSEEvent,
+				{
+					400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+					401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+					402: ErrorEnvelope<
+						402,
+						| "api_request_limit_exceeded"
+						| "credit_limit_exceeded"
+						| "feature_not_available"
+						| "file_count_plan_limit"
+						| "file_size_plan_limit"
+						| "row_plan_limit"
+					>
+					403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+					404: ErrorEnvelope<404, "not_found" | "table_not_found">
+					408: ErrorEnvelope<408, "request_timeout">
+					410: ErrorEnvelope<410, "table_soft_deleted">
+					413: ErrorEnvelope<413, "content_too_large">
+					415: ErrorEnvelope<415, "unsupported_media_type">
+					422: ErrorEnvelope<422, "extraction_unprocessable" | "unprocessable_entity">
+					429: ErrorEnvelope<429, "too_many_requests">
+					500: ErrorEnvelope<500, "captcha_unavailable" | "extraction_failed" | "internal_server_error">
+					502: ErrorEnvelope<502, "bad_gateway">
+					503: ErrorEnvelope<503, "extraction_unavailable" | "service_unavailable">
+					504: ErrorEnvelope<504, "gateway_timeout">
+				}
+			>
 		}
 	}
 	row: {
-		aggregate(input: { params: { project_id: string; table_id: string }; search: { aggs: string; filter?: string } } & _HttpOpts): TThrow extends true ? Promise<Record<string, number | null>> : Promise<SDKResult<Record<string, number | null>, _Expand<_Errs3>>>
-		bulk(input: { params: { project_id: string; table_id: string }; json: { creates?: Record<string, unknown>[]; deletes?: string[]; updates?: { data: Record<string, unknown>; id: string }[] } } & _HttpOpts): TThrow extends true ? Promise<{ created?: Record<string, unknown>[]; deleted?: string[]; updated?: Record<string, unknown>[] }> : Promise<SDKResult<{ created?: Record<string, unknown>[]; deleted?: string[]; updated?: Record<string, unknown>[] }, _Expand<_Errs4>>>
-		create(input: { params: { project_id: string; table_id: string }; json: Record<string, unknown> } & _HttpOpts): TThrow extends true ? Promise<Record<string, unknown>> : Promise<SDKResult<Record<string, unknown>, _Expand<_Errs5>>>
-		"delete"(input: _Expand<_Inp12> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res12>> : Promise<SDKResult<_Expand<_Res12>, _Expand<_Errs20>>>
-		list(input: { params: { project_id: string; table_id: string }; search: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string } } & _HttpOpts): TThrow extends true ? Promise<{ count: number | null; hasMore: boolean; limit: number; nextCursor: string | null; page: number | null; rows: Record<string, unknown>[] }> : Promise<SDKResult<{ count: number | null; hasMore: boolean; limit: number; nextCursor: string | null; page: number | null; rows: Record<string, unknown>[] }, _Expand<_Errs25>>>
-		retrieve(input: _Expand<_Inp12> & _HttpOpts): TThrow extends true ? Promise<Record<string, unknown>> : Promise<SDKResult<Record<string, unknown>, _Expand<_Errs21>>>
-		source(input: { params: { project_id: string; table_id: string; row_id: string }; search: { disposition?: "attachment" | "inline" } } & _HttpOpts): TThrow extends true ? Promise<ArrayBuffer> : Promise<SDKResult<ArrayBuffer, _Expand<_Errs19>>>
-		update(input: { params: { project_id: string; table_id: string; row_id: string }; json: Record<string, unknown> } & _HttpOpts): TThrow extends true ? Promise<Record<string, unknown>> : Promise<SDKResult<Record<string, unknown>, _Expand<_Errs7>>>
+		/**
+		 * Aggregate column values
+		 */
+		aggregate: HoneyCall<
+			{ params: { project_id: string; table_id: string }; search: { aggs: string; filter?: string } },
+			ListProjectsTablesRowsResponse20021d74b,
+			{
+				400: ErrorEnvelope<
+					400,
+					"captcha_failed" | "captcha_required" | "invalid_aggregation" | "invalid_filter" | "invalid_input"
+				>
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Bulk create/update/delete rows
+		 */
+		bulk: HoneyCall<
+			{ params: { project_id: string; table_id: string }; json: CreateProjectsTablesRowRequestDbbb57 },
+			CreateProjectsTablesRowResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input" | "row_validation_failed">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available" | "row_plan_limit">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "row_bulk_failed">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Create row
+		 */
+		create: HoneyCall<
+			{ params: { project_id: string; table_id: string }; json: CreateProjectsTablesRowRequest },
+			CreateProjectsTablesRowRequest,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input" | "row_validation_failed">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available" | "row_plan_limit">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "row_create_failed">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Delete row
+		 */
+		delete: HoneyCall<
+			{ params: { project_id: string; row_id: string; table_id: string } },
+			DeleteOrganizationsWebhookResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "row_not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "row_delete_failed">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * List rows
+		 */
+		list: HoneyCall<
+			{
+				params: { project_id: string; table_id: string }
+				search?: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string }
+			},
+			ListProjectsTablesRowsResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Get row
+		 */
+		retrieve: HoneyCall<
+			{ params: { project_id: string; row_id: string; table_id: string } },
+			CreateProjectsTablesRowRequest,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "row_not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * The source file behind a row: download it, or open a PDF or image inline
+		 */
+		source: HoneyCall<
+			{
+				params: { project_id: string; row_id: string; table_id: string }
+				search?: { disposition?: "attachment" | "inline" }
+			},
+			Uint8Array<ArrayBuffer>,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "row_not_found" | "row_source_not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Update row
+		 */
+		update: HoneyCall<
+			{ params: { project_id: string; row_id: string; table_id: string }; json: CreateProjectsTablesRowRequest },
+			CreateProjectsTablesRowRequest,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input" | "row_validation_failed">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "row_not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "row_update_failed">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
 	}
 	suggest: {
-		schema(input: { params: { project_id: string }; form: { file?: Blob; text?: string } } & _HttpOpts): TThrow extends true ? Promise<{ columns: { description?: string; name: string; "type": string }[]; confidence: number; instruction?: string }> : Promise<SDKResult<{ columns: { description?: string; name: string; "type": string }[]; confidence: number; instruction?: string }, _Expand<_Errs30>>>
+		/**
+		 * Suggest schema from text or file (multipart)
+		 */
+		schema: HoneyCall<
+			{ params: { project_id: string }; form: { file?: Blob; text?: string } },
+			CreateProjectsSuggestSchemaResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "extraction_failed" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
 	}
 	table: {
-		create(input: _Expand<_Inp4> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs8>>>
-		"delete"(input: _Expand<_Inp7> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res12>> : Promise<SDKResult<_Expand<_Res12>, _Expand<_Errs26>>>
-		duplicate(input: { params: { project_id: string; table_id: string }; json: { name: string; slug: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs23>>>
-		"export"(input: { params: { project_id: string; table_id: string }; search: { filter?: string; format: "csv" | "json" | "xlsx"; order?: string; schema?: "true" | "false"; search?: string; since?: string } } & _HttpOpts): TThrow extends true ? Promise<{ id: string; status: "processing" }> : Promise<SDKResult<{ id: string; status: "processing" }, _Expand<_Errs12>>>
-		list(input: _Expand<_Inp5> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res9>> : Promise<SDKResult<_Expand<_Res9>, _Expand<_Errs34>>>
-		restore(input: { params: { project_id: string; table_id: string }; json: { slug?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs22>>>
-		retrieve(input: _Expand<_Inp7> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs26>>>
-		update(input: _Expand<_Inp10> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs24>>>
+		/**
+		 * Create table
+		 */
+		create: HoneyCall<
+			{ params: { project_id: string }; json: CreateProjectsTableRequest },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<
+					402,
+					"api_request_limit_exceeded" | "column_limit_reached" | "feature_not_available" | "table_plan_limit"
+				>
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_create_failed">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Delete table (soft, 72h grace)
+		 */
+		delete: HoneyCall<
+			{ params: { project_id: string; table_id: string } },
+			DeleteOrganizationsWebhookResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Duplicate table structure
+		 */
+		duplicate: HoneyCall<
+			{ params: { project_id: string; table_id: string }; json: CreateProjectsTablesDuplicateRequest },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				409: ErrorEnvelope<409, "table_project_id_slug_duplicate">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_duplicate_failed">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Export table rows
+		 */
+		export: HoneyCall<
+			{
+				params: { project_id: string; table_id: string }
+				search: {
+					filter?: string
+					format: "csv" | "json" | "xlsx"
+					order?: string
+					schema?: "true" | "false"
+					search?: string
+					since?: string
+				}
+			},
+			ListProjectsTablesExportResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "export_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				410: ErrorEnvelope<410, "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "export_failed" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * List tables
+		 */
+		list: HoneyCall<
+			{
+				params: { project_id: string }
+				search?: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string }
+			},
+			ListProjectsTablesResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Restore deleted table
+		 */
+		restore: HoneyCall<
+			{ params: { project_id: string; table_id: string }; json: CreateProjectsTablesRestoreRequest },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				409: ErrorEnvelope<409, "table_project_id_slug_duplicate">
+				410: ErrorEnvelope<410, "table_delete_expired" | "table_soft_deleted">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_restore_failed">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Get table
+		 */
+		retrieve: HoneyCall<
+			{ params: { project_id: string; table_id: string } },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Update table
+		 */
+		update: HoneyCall<
+			{ params: { project_id: string; table_id: string }; json: UpdateProjectsTableRequest },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				409: ErrorEnvelope<409, "table_project_id_slug_duplicate">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_update_failed">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
 	}
 	tableTemplate: {
-		create(input: _Expand<_Inp0> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res6>> : Promise<SDKResult<_Expand<_Res6>, _Expand<_Errs31>>>
-		"delete"(input: { params: { template_id: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res12>> : Promise<SDKResult<_Expand<_Res12>, _Expand<_Errs14>>>
-		listMine(input?: { search: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string; select?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res10>> : Promise<SDKResult<_Expand<_Res10>, _Expand<_Errs33>>>
-		projectList(input: _Expand<_Inp5> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res10>> : Promise<SDKResult<_Expand<_Res10>, _Expand<_Errs34>>>
-		projectRetrieve(input: { params: { project_id: string; template_id: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res6>> : Promise<SDKResult<_Expand<_Res6>, _Expand<_Errs26>>>
-		update(input: _Expand<_Inp13> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res6>> : Promise<SDKResult<_Expand<_Res6>, _Expand<_Errs15>>>
-		use(input: { params: { project_id: string; template_id: string }; json: { name: string; slug?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res7>> : Promise<SDKResult<_Expand<_Res7>, _Expand<_Errs13>>>
+		/**
+		 * Create table template
+		 */
+		create: HoneyCall<
+			{ json: CreateTableTemplateRequest },
+			GetProjectsTableTemplateResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_template_create_failed">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Delete table template
+		 */
+		delete: HoneyCall<
+			{ params: { template_id: string } },
+			DeleteOrganizationsWebhookResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<
+					403,
+					"email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended" | "table_template_forbidden"
+				>
+				404: ErrorEnvelope<404, "not_found" | "table_template_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_template_delete_failed">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * List my table templates
+		 */
+		listMine: HoneyCall<
+			{
+				search?: {
+					cursor?: string
+					filter?: string
+					limit?: number
+					order?: string
+					page?: number
+					q?: string
+					select?: string
+				}
+			},
+			ListProjectsTableTemplatesResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Browse table templates
+		 */
+		projectList: HoneyCall<
+			{
+				params: { project_id: string }
+				search?: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string }
+			},
+			ListProjectsTableTemplatesResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Preview table template
+		 *
+		 * Read through a cache: usually fresh within 120s, never staler than 600s.
+		 */
+		projectRetrieve: HoneyCall<
+			{ params: { project_id: string; template_id: string } },
+			GetProjectsTableTemplateResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Update table template
+		 */
+		update: HoneyCall<
+			{ params: { template_id: string }; json: UpdateTableTemplateRequest },
+			GetProjectsTableTemplateResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<
+					403,
+					"email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended" | "table_template_forbidden"
+				>
+				404: ErrorEnvelope<404, "not_found" | "table_template_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_template_update_failed">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Create table from template
+		 */
+		use: HoneyCall<
+			{ params: { project_id: string; template_id: string }; json: CreateProjectsTableTemplatesUseRequest },
+			CreateProjectsTableTemplatesUseResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available" | "table_plan_limit">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "table_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				409: ErrorEnvelope<409, "table_project_id_slug_duplicate">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "table_create_failed">
+				502: ErrorEnvelope<502, "bad_gateway">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
 	}
 	webhook: {
-		create(input: { params: { organization_id: string }; json: { events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]; name?: string; url: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res0>> : Promise<SDKResult<_Expand<_Res0>, _Expand<_Errs32>>>
-		"delete"(input: _Expand<_Inp1> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res12>> : Promise<SDKResult<_Expand<_Res12>, _Expand<_Errs29>>>
-		deliveries(input: _Expand<_Inp2> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res8>> : Promise<SDKResult<_Expand<_Res8>, _Expand<_Errs29>>>
-		list(input: { params: { organization_id: string }; search: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res11>> : Promise<SDKResult<_Expand<_Res11>, _Expand<_Errs33>>>
-		retrieve(input: _Expand<_Inp1> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res1>> : Promise<SDKResult<_Expand<_Res1>, _Expand<_Errs29>>>
-		rotateSecret(input: _Expand<_Inp1> & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res0>> : Promise<SDKResult<_Expand<_Res0>, _Expand<_Errs28>>>
-		test(input: _Expand<_Inp1> & _HttpOpts): TThrow extends true ? Promise<{ http_status: number | null; response_body: string | null; status: "error" | "success" | "timeout" }> : Promise<SDKResult<{ http_status: number | null; response_body: string | null; status: "error" | "success" | "timeout" }, _Expand<_Errs27>>>
-		update(input: { params: { organization_id: string; id: string }; json: { active?: boolean; events?: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]; name?: string; url?: string } } & _HttpOpts): TThrow extends true ? Promise<_Expand<_Res1>> : Promise<SDKResult<_Expand<_Res1>, _Expand<_Errs28>>>
+		/**
+		 * Create webhook
+		 */
+		create: HoneyCall<
+			{ params: { organization_id: string }; json: CreateOrganizationsWebhookRequest },
+			CreateOrganizationsWebhookResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "webhook_create_failed">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Delete webhook
+		 */
+		delete: HoneyCall<
+			{ params: { id: string; organization_id: string } },
+			DeleteOrganizationsWebhookResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "webhook_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * List webhook deliveries
+		 */
+		deliveries: HoneyCall<
+			{
+				params: { id: string; organization_id: string }
+				search?: {
+					cursor?: string
+					event?: "batch.complete" | "batch.failed" | "batch.partial" | "ping"
+					limit?: number
+					order?: string
+					page?: number
+					status?: "pending" | "success" | "failed"
+				}
+			},
+			ListOrganizationsWebhooksDeliveriesResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "webhook_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * List webhooks
+		 */
+		list: HoneyCall<
+			{
+				params: { organization_id: string }
+				search?: { cursor?: string; filter?: string; limit?: number; order?: string; page?: number; q?: string }
+			},
+			ListOrganizationsWebhooksResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Get webhook
+		 */
+		retrieve: HoneyCall<
+			{ params: { id: string; organization_id: string } },
+			GetOrganizationsWebhookResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "webhook_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Rotate webhook secret
+		 */
+		rotateSecret: HoneyCall<
+			{ params: { id: string; organization_id: string } },
+			CreateOrganizationsWebhookResponse201,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "webhook_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "webhook_update_failed">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Send test webhook
+		 */
+		test: HoneyCall<
+			{ params: { id: string; organization_id: string } },
+			CreateOrganizationsWebhooksTestResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "webhook_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "webhook_test_failed">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
+		/**
+		 * Update webhook
+		 */
+		update: HoneyCall<
+			{ params: { id: string; organization_id: string }; json: UpdateOrganizationsWebhookRequest },
+			GetOrganizationsWebhookResponse200,
+			{
+				400: ErrorEnvelope<400, "captcha_failed" | "captcha_required" | "invalid_input">
+				401: ErrorEnvelope<401, "impersonation_ended" | "unauthorized">
+				402: ErrorEnvelope<402, "api_request_limit_exceeded" | "feature_not_available">
+				403: ErrorEnvelope<403, "email_not_verified" | "forbidden" | "impersonation_forbidden" | "org_suspended">
+				404: ErrorEnvelope<404, "not_found" | "webhook_not_found">
+				408: ErrorEnvelope<408, "request_timeout">
+				413: ErrorEnvelope<413, "content_too_large">
+				415: ErrorEnvelope<415, "unsupported_media_type">
+				422: ErrorEnvelope<422, "unprocessable_entity">
+				429: ErrorEnvelope<429, "too_many_requests">
+				500: ErrorEnvelope<500, "captcha_unavailable" | "internal_server_error" | "webhook_update_failed">
+				502: ErrorEnvelope<502, "bad_gateway" | "email_send_failed">
+				503: ErrorEnvelope<503, "service_unavailable">
+				504: ErrorEnvelope<504, "gateway_timeout">
+			}
+		>
 	}
 }
+
+/** `client.safe`: every operation, a call answering a Result. */
+export type AnyrowSDKSafe = HoneySafe<AnyrowSDKOperations>
