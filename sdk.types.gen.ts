@@ -1,11 +1,4 @@
-import type {
-	RealtimeOptions,
-	Result,
-	ResumableConnection,
-	SDKConfig,
-	SSEEvent,
-	TypedWebSocket,
-} from "./sdk.runtime.gen"
+import type { Result, SDKConfig, SSEEvent } from "./sdk.runtime.gen"
 
 export type CreateOrganizationsWebhookRequest = {
 	events: ("batch.complete" | "batch.failed" | "batch.partial" | "ping")[]
@@ -1222,7 +1215,6 @@ export type HttpOptions = {
 }
 export type SseOptions = Omit<HttpOptions, "idempotencyKey"> & { lastEventId?: string }
 export type WsOptions = { protocols?: string | string[]; reconnectToken?: string }
-export type RealtimeCallOptions = Omit<HttpOptions, "idempotencyKey" | "timeout"> & RealtimeOptions
 
 type ErrorField = { error_key: string; message: string; path: string }
 
@@ -1257,16 +1249,14 @@ type HoneyStream<I, V, E = never> = {
 
 /** `client.safe`: every REST and stream call answering a Result, never throwing an API answer; a connection as is. */
 export type HoneySafe<T> = {
-	[K in keyof T]: T[K] extends (...input: never[]) => ResumableConnection<infer _> | TypedWebSocket
-		? T[K]
-		: T[K] extends HoneyCall<infer I, infer D, infer E, infer H>
-			? {
-					(input: I & HttpOptions & { raw: true }): Promise<Result<Response, E>>
-					(...input: HoneyArgs<I, HttpOptions & { raw?: false }>): Promise<Result<D, E, H>>
-				}
-			: T[K] extends HoneyStream<infer I, infer V, infer E>
-				? (...input: HoneyArgs<I, SseOptions>) => Promise<Result<AsyncIterable<V>, E>>
-				: HoneySafe<T[K]>
+	[K in keyof T]: T[K] extends HoneyCall<infer I, infer D, infer E, infer H>
+		? {
+				(input: I & HttpOptions & { raw: true }): Promise<Result<Response, E>>
+				(...input: HoneyArgs<I, HttpOptions & { raw?: false }>): Promise<Result<D, E, H>>
+			}
+		: T[K] extends HoneyStream<infer I, infer V, infer E>
+			? (...input: HoneyArgs<I, SseOptions>) => Promise<Result<AsyncIterable<V>, E>>
+			: HoneySafe<T[K]>
 }
 
 export type AnyrowSDKConfig = Omit<SDKConfig, "baseURL"> & {
