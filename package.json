@@ -12,6 +12,12 @@
 	"exports": {
 		".": "./sdk.index.gen.ts"
 	},
+	"files": [
+		"*.gen.ts",
+		"CHANGELOG.md",
+		"LICENSE",
+		"README.md"
+	],
 	"homepage": "https://anyrow.ai",
 	"keywords": [
 		"anyrow",
